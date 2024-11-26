@@ -1,6 +1,5 @@
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
 import {
   DribbbleIcon,
   FacebookIcon,
@@ -13,18 +12,11 @@ import FooterMobile from "./footerMobile";
 
 const Footer = () => {
   return (
-    <div className="xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm xl:px-0 lg:px-3 px-6 mx-auto">
+    <div className="xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm xl:px-0 lg:px-3 px-6 mx-auto py-5">
       <div className="space-y-20">
         {/* Logo */}
         <div className="flex flex-col gap-2">
-          <div>
-            <Image
-              src="/logo-nusadex-text.svg"
-              alt="log"
-              width={150}
-              height={300}
-            />
-          </div>
+          <img src="/logo-nusadex-text.svg" alt="" className="w-[150px]" />
           <p className="opacity-70">©2017 - 2024 NUSADEX.COM</p>
         </div>
 
