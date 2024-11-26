@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   DribbbleIcon,
   FacebookIcon,
@@ -16,7 +17,14 @@ const Footer = () => {
       <div className="space-y-20">
         {/* Logo */}
         <div className="flex flex-col gap-2">
-          <h1 className="font-extrabold">LOGO</h1>
+          <div>
+            <Image
+              src="/logo-nusadex-text.svg"
+              alt="log"
+              width={150}
+              height={300}
+            />
+          </div>
           <p className="opacity-70">©2017 - 2024 NUSADEX.COM</p>
         </div>
 
