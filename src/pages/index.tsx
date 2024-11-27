@@ -9,6 +9,15 @@ import {
   ShieldCheckIcon,
 } from "lucide-react";
 import Link from "next/link";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 export default function Home() {
   return (
@@ -123,7 +132,7 @@ export default function Home() {
             <hr />
             <div className="flex justify-between items-center">
               <div className="flex flex-col gap-2">
-                <p className="font-semibold">$56,623</p>
+                <p className="font-semibold">$59</p>
                 <p className="opacity-80">3.41%</p>
               </div>
               <img src="/chart-state 1.svg" alt="" />
@@ -233,7 +242,175 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Section Market Update */}
+      {/* Section Register New Koin */}
+      <div className="w-full flex px-14 py-5 items-center">
+        <div className="w-full flex flex-col gap-3">
+          <h2 className="font-semibold">Register your coins now!</h2>
+          <p className="opacity-70">
+            List your coins and enjoy skyrocketing profits, a strong community
+            <br />
+            and proven security. Don't miss this opportunity!
+          </p>
+        </div>
+        <Button>Register Now</Button>
+      </div>
+
+      {/* Market Update */}
+      <div className="w-full flex flex-col gap-8">
+        <div className="w-full items-start">
+          <h1 className="font-semibold text-2xl">Market Update</h1>
+        </div>
+        <div className="w-full flex flex-col gap-3">
+          <p>Cryptocurrency Categories</p>
+          <div className="w-full flex ">
+            <div className="flex gap-3">
+              <button className="border rounded-md p-2 bg-foreground/5 hover:bg-white hover:text-black hover:font-semibold">
+                Popular
+              </button>
+              <button className="border rounded-md p-2 bg-foreground/5 hover:bg-white hover:text-black hover:font-semibold">
+                Metaverse
+              </button>
+              <button className="border rounded-md p-2 bg-foreground/5 hover:bg-white hover:text-black hover:font-semibold">
+                Gaming
+              </button>
+              <button className="border rounded-md p-2 bg-foreground/5 hover:bg-white hover:text-black hover:font-semibold">
+                Energy
+              </button>
+              <button className="border rounded-md p-2 bg-foreground/5 hover:bg-white hover:text-black hover:font-semibold">
+                Meme
+              </button>
+              <button className="border rounded-md p-2 bg-foreground/5 hover:bg-white hover:text-black hover:font-semibold">
+                Music
+              </button>
+              <button className="border rounded-md p-2 bg-foreground/5 hover:bg-white hover:text-black hover:font-semibold">
+                See All 12+
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="border rounded-lg p-8 bg-foreground/5">
+          <Table>
+            <TableCaption><button>View All</button></TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[50px]">NO</TableHead>
+                <TableHead>NAME</TableHead>
+                <TableHead>LAST PRICE</TableHead>
+                <TableHead>CHANGE</TableHead>
+                <TableHead>MARKET STATS</TableHead>
+                <TableHead className="text-right">TRADE</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell className="font-medium">1</TableCell>
+                <TableCell className="flex items-center gap-3">
+                  <img
+                    src="https://s2.coinmarketcap.com/static/img/coins/64x64/1.png"
+                    alt=""
+                    className="w-12 h-12"
+                  />
+                  <p className="font-medium">Bitcoin | BTC</p>
+                </TableCell>
+                <TableCell>$56,623.54</TableCell>
+                <TableCell>1.4%</TableCell>
+                <TableCell>
+                  <img src="/chart-btc-landingPage.svg" alt="" />
+                </TableCell>
+                <TableCell className="text-right">
+                  <button className="border rounded-md font-medium px-5 py-3 bg-foreground/5 hover:bg-white hover:text-black">
+                    Trade
+                  </button>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="font-medium">2</TableCell>
+                <TableCell className="flex items-center gap-3">
+                  <img
+                    src="https://pavocoin.xyz/wp-content/uploads/2024/07/Logo-1-100x100.png"
+                    alt=""
+                    className="w-12 h-12"
+                  />
+                  <p className="font-medium">Pavo Coin | PVO</p>
+                </TableCell>
+                <TableCell>$56,623</TableCell>
+                <TableCell>1.5%</TableCell>
+                <TableCell>
+                  <img src="/chart-btc-landingPage.svg" alt="" />
+                </TableCell>
+                <TableCell className="text-right">
+                  <button className="border rounded-md font-medium px-5 py-3 bg-foreground/5 hover:bg-white hover:text-black">
+                    Trade
+                  </button>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="font-medium">3</TableCell>
+                <TableCell className="flex items-center gap-3">
+                  <img
+                    src="https://www.geckoterminal.com/_next/image?url=https%3A%2F%2Fassets.geckoterminal.com%2F78v65lm9dbzcs74ne2vyra9zj3k2&w=64&q=75"
+                    alt=""
+                    className="w-12 h-12"
+                  />
+                  <p className="font-medium">Mudapedia | MUDA</p>
+                </TableCell>
+                <TableCell>$56</TableCell>
+                <TableCell>5.41%</TableCell>
+                <TableCell>
+                  <img src="/chart-btc-landingPage.svg" alt="" />
+                </TableCell>
+                <TableCell className="text-right">
+                  <button className="border rounded-md font-medium px-5 py-3 bg-foreground/5 hover:bg-white hover:text-black">
+                    Trade
+                  </button>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="font-medium">4</TableCell>
+                <TableCell className="flex items-center gap-3">
+                  <img
+                    src="https://www.geckoterminal.com/_next/image?url=https%3A%2F%2Fassets.geckoterminal.com%2Fam67zirk2xbaw0hhwupmxqdx7kgm&w=64&q=75"
+                    alt=""
+                    className="w-12 h-12"
+                  />
+                  <p className="font-medium">UIStellar | UTR</p>
+                </TableCell>
+                <TableCell>$59</TableCell>
+                <TableCell>1.4%</TableCell>
+                <TableCell>
+                  <img src="/chart-btc-landingPage.svg" alt="" />
+                </TableCell>
+                <TableCell className="text-right">
+                  <button className="border rounded-md font-medium px-5 py-3 bg-foreground/5 hover:bg-white hover:text-black">
+                    Trade
+                  </button>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="font-medium">5</TableCell>
+                <TableCell className="flex items-center gap-3">
+                  <img
+                    src="https://www.geckoterminal.com/_next/image?url=https%3A%2F%2Fassets.geckoterminal.com%2Fgx0p0a456zfixw9q34uwakay9qtc&w=64&q=75"
+                    alt=""
+                    className="w-12 h-12"
+                  />
+                  <p className="font-medium">Gasvin Coin | GASVIN</p>
+                </TableCell>
+                <TableCell>$59</TableCell>
+                <TableCell>3.41%</TableCell>
+                <TableCell>
+                  <img src="/chart-btc-landingPage.svg" alt="" />
+                </TableCell>
+                <TableCell className="text-right">
+                  <button className="border rounded-md font-medium px-5 py-3 bg-foreground/5 hover:bg-white hover:text-black">
+                    Trade
+                  </button>
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
+      </div>
     </div>
   );
 }
