@@ -21,8 +21,23 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import token from "@/lib/sdk/tokens";
+import { useEffect } from "react";
 
 export default function Home() {
+  const getTokenList = async () => {
+    try {
+      const data = await token.list();
+      if (data) {
+        console.log(data);
+      }
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    getTokenList();
+  }, []);
+
   return (
     <div className="w-full space-y-32">
       {/* Section CTA */}
