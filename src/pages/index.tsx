@@ -5,8 +5,11 @@ import {
   ArrowUpRightIcon,
   BitcoinIcon,
   BookUserIcon,
+  CircleDollarSignIcon,
   LibraryIcon,
   ShieldCheckIcon,
+  UserPenIcon,
+  WalletIcon,
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -41,7 +44,7 @@ export default function Home() {
 
       <div className="w-full items-start flex flex-col gap-3">
         <h2 className="font-medium">Token Trends</h2>
-        <div className="w-full grid grid-cols-4 gap-6">
+        <div className="w-full grid lg:grid-cols-4 gap-6 md:grid-cols-3 sm:grid-cols-2">
           <div className="w-full border rounded-md p-3 bg-foreground/5 flex flex-col gap-3">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2">
@@ -151,7 +154,7 @@ export default function Home() {
             cryptocurrency
           </p>
         </div>
-        <div className="grid grid-cols-4 w-full gap-6">
+        <div className="grid lg:grid-cols-4 w-full gap-6 md:grid-cols-3 sm:grid-cols-2">
           <div className="w-full border rounded-md bg-foreground/5 flex flex-col gap-10 p-3">
             <div className="flex flex-col items-start gap-7">
               <div className="flex border rounded-full bg-foreground/20 p-4 justify-center items-center">
@@ -243,7 +246,7 @@ export default function Home() {
       </div>
 
       {/* Section Register New Koin */}
-      <div className="w-full flex px-14 py-5 items-center">
+      <div className="w-full flex py-5 items-center">
         <div className="w-full flex flex-col gap-3">
           <h2 className="font-semibold">Register your coins now!</h2>
           <p className="opacity-70">
@@ -290,7 +293,9 @@ export default function Home() {
         </div>
         <div className="border rounded-lg p-8 bg-foreground/5">
           <Table>
-            <TableCaption><button>View All</button></TableCaption>
+            <TableCaption>
+              <button>View All</button>
+            </TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[50px]">NO</TableHead>
@@ -318,9 +323,7 @@ export default function Home() {
                   <img src="/chart-btc-landingPage.svg" alt="" />
                 </TableCell>
                 <TableCell className="text-right">
-                  <button className="border rounded-md font-medium px-5 py-3 bg-foreground/5 hover:bg-white hover:text-black">
-                    Trade
-                  </button>
+                  <Button>Trade</Button>
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -339,9 +342,7 @@ export default function Home() {
                   <img src="/chart-btc-landingPage.svg" alt="" />
                 </TableCell>
                 <TableCell className="text-right">
-                  <button className="border rounded-md font-medium px-5 py-3 bg-foreground/5 hover:bg-white hover:text-black">
-                    Trade
-                  </button>
+                  <Button>Trade</Button>
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -360,9 +361,7 @@ export default function Home() {
                   <img src="/chart-btc-landingPage.svg" alt="" />
                 </TableCell>
                 <TableCell className="text-right">
-                  <button className="border rounded-md font-medium px-5 py-3 bg-foreground/5 hover:bg-white hover:text-black">
-                    Trade
-                  </button>
+                  <Button>Trade</Button>
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -381,9 +380,7 @@ export default function Home() {
                   <img src="/chart-btc-landingPage.svg" alt="" />
                 </TableCell>
                 <TableCell className="text-right">
-                  <button className="border rounded-md font-medium px-5 py-3 bg-foreground/5 hover:bg-white hover:text-black">
-                    Trade
-                  </button>
+                  <Button>Trade</Button>
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -402,13 +399,72 @@ export default function Home() {
                   <img src="/chart-btc-landingPage.svg" alt="" />
                 </TableCell>
                 <TableCell className="text-right">
-                  <button className="border rounded-md font-medium px-5 py-3 bg-foreground/5 hover:bg-white hover:text-black">
-                    Trade
-                  </button>
+                  <Button>Trade</Button>
                 </TableCell>
               </TableRow>
             </TableBody>
           </Table>
+        </div>
+      </div>
+
+      {/* Get Started Tutorial */}
+      <div className="w-full flex justify-between lg:flex-row flex-col gap-5">
+        <div className="flex flex-col gap-7">
+          <h1 className="text-2xl font-semibold">How To Get Started</h1>
+          <p className="opacity-70">
+            Simple and easy way to start your investment
+            <br />
+            in cryptocurrency
+          </p>
+          <div className="items-start">
+            <Button>Get Started</Button>
+          </div>
+        </div>
+        <div className="flex flex-col gap-5">
+          <div className="flex items-center gap-5 border rounded-lg bg-foreground/5 p-4">
+            <div className="bg-foreground/20 p-5 border rounded-full">
+              <UserPenIcon
+                size={45}
+                className="bg-foreground/100 text-[#434344] border rounded-full p-2"
+              />
+            </div>
+            <div className="flex flex-col">
+              <h2 className="text-lg">Create Your Account</h2>
+              <p className="opacity-70">
+                Your account and personal identity are <br />
+                guaranteed safe.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-5 border rounded-lg bg-foreground/5 p-4">
+            <div className="bg-foreground/20 p-5 border rounded-full">
+              <WalletIcon
+                size={45}
+                className="bg-foreground/100 text-[#434344] border rounded-full p-2"
+              />
+            </div>
+            <div className="flex flex-col">
+              <h2 className="text-lg">Create Your Account</h2>
+              <p className="opacity-70">
+                Connect the bank account to start transactions.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-5 border rounded-lg bg-foreground/5 p-4">
+            <div className="bg-foreground/20 p-5 border rounded-full">
+              <CircleDollarSignIcon
+                size={45}
+                className="bg-foreground/100 text-[#434344] border rounded-full p-2"
+              />
+            </div>
+            <div className="flex flex-col">
+              <h2 className="text-lg">Create Your Account</h2>
+              <p className="opacity-70">
+                Buy and sell popular currencies and keep track <br />
+                of them.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
