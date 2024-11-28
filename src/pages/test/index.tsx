@@ -2,12 +2,15 @@
 import ohlcv from '@/lib/sdk/ohlcv';
 import token from '@/lib/sdk/tokens';
 import { OhclvDataType } from '@/types/ohclvDataTypes';
-import { ApiV3Token } from '@raydium-io/raydium-sdk-v2';
+import { ApiV3PageIns, ApiV3Token, ApiV3TokenRes, PoolsApiReturn } from '@raydium-io/raydium-sdk-v2';
+import { T } from '@raydium-io/raydium-sdk-v2/lib/api-9d98bd04';
 import React, { useEffect, useState } from 'react';
 
 const TestPage = () => {
   const [marketData, setMarketData] = useState<OhclvDataType.Item[]>([])
   const [tokenInfoData, setTokenInfoData] = useState({} as ApiV3Token)
+  const [poolInfoData, setPoolInfoData] = useState({} as ApiV3PageIns<T>)
+  const [tokenList, setTokenList] = useState<ApiV3Token[]>([])
 
   const getMarketData = async () => {
     try {
@@ -24,7 +27,36 @@ const TestPage = () => {
       // parameter pada getTokenInfo ganti dengan CA token
       const data = await token.getTokenInfo('EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm')
       setTokenInfoData(data[0])
-      console.log(data[0])
+      console.log(data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const getPoolInfoData = async () => {
+    try {
+      const data = await token.getPairInfo('D28Xv8u5SaShbRnbWFBsVmYd9zwotHsd532wBmdBpump', 'So11111111111111111111111111111111111111112')
+      setPoolInfoData(data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const getTokenList = async () => {
+    try {
+      const data = await token.list(100)
+      if (data) {
+        setTokenList(data)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const getParsedTokenInfoData = async () =>{
+    try {
+      const data = await token.getParsedTokenInfo('Df6yfrKC8kZE3KNkrHERKzAetSxbrWeniQfyJY4Jpump')
+      console.log(data)
     } catch (error) {
       console.log(error)
     }
@@ -33,7 +65,11 @@ const TestPage = () => {
 
   useEffect(() => {
     // getMarketData()
-    getTokenInfoData()
+    // getTokenInfoData()
+    // getPoolInfoData()
+    // getTokenList()
+    getParsedTokenInfoData()
+
   }, [])
 
   return (
