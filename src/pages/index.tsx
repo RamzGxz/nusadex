@@ -31,31 +31,35 @@ export default function Home() {
     try {
       const data = await token.list(50);
       if (data) {
-        setTokenList(data);
+        setTokenList(data.slice(0, 4));
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
     getTokenList();
   }, []);
-  console.log(tokenList);
 
   return (
     <div className="w-full space-y-32">
       {/* Section CTA */}
 
-      <div className="flex flex-col w-full justify-center items-center gap-8 pt-20">
-        <h1 className="text-2xl font-semibold">
-          Start and Build Your Crypto Portfolio Here
-        </h1>
-        <p className="opacity-70 text-center">
-          Only at CryptoCap, you can build a good portfolio and learn <br />
-          best practices about cryptocurrency.
-        </p>
-        <Button className="mt-5" size={"lg"}>
-          Get Started
-        </Button>
+      <div className={`w-full flex items-center max-w-screen-lg mx-auto lg:flex-row flex-col lg:gap-0 gap-16 justify-between lg:h-[85vh] py-8`}>
+        <div className="space-y-8 text-left lg:w-1/2 w-full">
+          <h1 className="text-5xl font-semibold leading-snug">
+            Start and Build Your Crypto Portfolio Here
+          </h1>
+          <p className="opacity-70">
+            Only at CryptoCap, you can build a good portfolio and learn <br />
+            best practices about cryptocurrency.
+          </p>
+          <Button className="mt-5" size={"lg"}>
+            Get Started
+          </Button>
+        </div>
+        <div className="lg:w-1/2 w-full h-full flex justify-center items-center">
+          <video className="first-img lg:w-[58%]" style={{ visibility: 'visible' }} autoPlay loop muted playsInline poster="https://www.okx.com/cdn/assets/imgs/243/F485DEA432C68FD9.png?x-oss-process=image/format,webp"><source src="https://www.okx.com/cdn/assets/files/243/79620084DA93114F.webm" type="video/webm" /><source src="https://www.okx.com/cdn/assets/files/243/78FBA21FD210816A.mp4" type="video/mp4" /><track kind="captions" /></video>
+        </div>
       </div>
 
       {/* Section TRENDING */}
@@ -70,10 +74,10 @@ export default function Home() {
                   <img
                     src={value.logoURI}
                     alt=""
-                    className="w-14 h-14 object-cover"
+                    className="w-10 h-10 object-cover"
                   />
-                  <p className="font-medium">{value.symbol}</p>
-                  <Badge>{value.name}</Badge>
+                  <p className="font-medium text-xs">{value.name && value.name.length > 10 ? value.name.slice(0, 10) + '...' : value.name}</p>
+                  <Badge className="text-xs max-w-24">{value.symbol}</Badge>
                 </div>
                 <button className="bg-foreground/10 p-2 rounded-md hover:bg-foreground/20 transition-colors">
                   <ArrowUpRightIcon size={24} />
@@ -285,8 +289,8 @@ export default function Home() {
         </div>
         <div className="w-full flex flex-col gap-3">
           <p>Cryptocurrency Categories</p>
-          <div className="w-full flex ">
-            <div className="flex gap-3">
+          <div className="w-full flex">
+            <div className="flex gap-3 flex-wrap">
               <button className="border rounded-md p-2 bg-foreground/5 hover:bg-white hover:text-black hover:font-semibold">
                 Popular
               </button>
