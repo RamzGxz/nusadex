@@ -22,14 +22,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import token from "@/lib/sdk/tokens";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { ApiV3Token } from "@raydium-io/raydium-sdk-v2";
 
 export default function Home() {
+  const [tokenList, setTokenList] = useState<ApiV3Token[]>([]);
   const getTokenList = async () => {
     try {
-      const data = await token.list();
+      const data = await token.list(50);
       if (data) {
-        console.log(data);
+        setTokenList(data);
       }
     } catch (error) {}
   };
@@ -37,6 +39,7 @@ export default function Home() {
   useEffect(() => {
     getTokenList();
   }, []);
+  console.log(tokenList);
 
   return (
     <div className="w-full space-y-32">
@@ -60,31 +63,33 @@ export default function Home() {
       <div className="w-full items-start flex flex-col gap-3">
         <h2 className="font-medium">Token Trends</h2>
         <div className="w-full grid lg:grid-cols-4 gap-6 md:grid-cols-3 sm:grid-cols-2">
-          <div className="w-full border rounded-md p-3 bg-foreground/5 flex flex-col gap-3">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <img
-                  src="https://pavocoin.xyz/wp-content/uploads/2024/07/Logo-1-100x100.png"
-                  alt=""
-                  className="w-14 h-14 object-cover"
-                />
-                <p className="font-medium">PVO</p>
-                <Badge>Pavo Coin</Badge>
+          {tokenList.map((value) => (
+            <div className="w-full border rounded-md p-3 bg-foreground/5 flex flex-col gap-3">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <img
+                    src={value.logoURI}
+                    alt=""
+                    className="w-14 h-14 object-cover"
+                  />
+                  <p className="font-medium">{value.symbol}</p>
+                  <Badge>{value.name}</Badge>
+                </div>
+                <button className="bg-foreground/10 p-2 rounded-md hover:bg-foreground/20 transition-colors">
+                  <ArrowUpRightIcon size={24} />
+                </button>
               </div>
-              <button className="bg-foreground/10 p-2 rounded-md hover:bg-foreground/20 transition-colors">
-                <ArrowUpRightIcon size={24} />
-              </button>
-            </div>
-            <hr />
-            <div className="flex justify-between items-center">
-              <div className="flex flex-col gap-2">
-                <p className="font-semibold">$56,623.54</p>
-                <p className="opacity-80">1.41%</p>
+              <hr />
+              <div className="flex justify-between items-center">
+                <div className="flex flex-col gap-2">
+                  <p className="font-semibold">{value.decimals}</p>
+                  <p className="opacity-80">1.41%</p>
+                </div>
+                <img src="/chart-state 1.svg" alt="" />
               </div>
-              <img src="/chart-state 1.svg" alt="" />
             </div>
-          </div>
-          <div className="w-full border rounded-md p-3 bg-foreground/5 flex flex-col gap-3">
+          ))}
+          {/* <div className="w-full border rounded-md p-3 bg-foreground/5 flex flex-col gap-3">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2">
                 <img
@@ -155,7 +160,7 @@ export default function Home() {
               </div>
               <img src="/chart-state 1.svg" alt="" />
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 
