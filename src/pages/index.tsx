@@ -24,6 +24,7 @@ import {
 import token from "@/lib/sdk/tokens";
 import { useEffect, useState } from "react";
 import { ApiV3Token } from "@raydium-io/raydium-sdk-v2";
+import Charts from "@/components/ui/charts";
 
 export default function Home() {
   const [tokenList, setTokenList] = useState<ApiV3Token[]>([]);
@@ -113,7 +114,7 @@ export default function Home() {
                   <p className="font-semibold">{value.decimals}</p>
                   <p className="opacity-80">1.41%</p>
                 </div>
-                <img src="/chart-state 1.svg" alt="" />
+                <Charts />
               </div>
             </div>
           ))}
@@ -296,7 +297,7 @@ export default function Home() {
                 <TableCell>$56,623.54</TableCell>
                 <TableCell>1.4%</TableCell>
                 <TableCell>
-                  <img src="/chart-btc-landingPage.svg" alt="" />
+                  <Charts />
                 </TableCell>
                 <TableCell className="text-right">
                   <Button>Trade</Button>
@@ -315,7 +316,7 @@ export default function Home() {
                 <TableCell>$56,623</TableCell>
                 <TableCell>1.5%</TableCell>
                 <TableCell>
-                  <img src="/chart-btc-landingPage.svg" alt="" />
+                  <Charts />
                 </TableCell>
                 <TableCell className="text-right">
                   <Button>Trade</Button>
@@ -334,7 +335,7 @@ export default function Home() {
                 <TableCell>$56</TableCell>
                 <TableCell>5.41%</TableCell>
                 <TableCell>
-                  <img src="/chart-btc-landingPage.svg" alt="" />
+                  <Charts />
                 </TableCell>
                 <TableCell className="text-right">
                   <Button>Trade</Button>
@@ -353,7 +354,7 @@ export default function Home() {
                 <TableCell>$59</TableCell>
                 <TableCell>1.4%</TableCell>
                 <TableCell>
-                  <img src="/chart-btc-landingPage.svg" alt="" />
+                  <Charts />
                 </TableCell>
                 <TableCell className="text-right">
                   <Button>Trade</Button>
@@ -372,7 +373,7 @@ export default function Home() {
                 <TableCell>$59</TableCell>
                 <TableCell>3.41%</TableCell>
                 <TableCell>
-                  <img src="/chart-btc-landingPage.svg" alt="" />
+                  <Charts />
                 </TableCell>
                 <TableCell className="text-right">
                   <Button>Trade</Button>
