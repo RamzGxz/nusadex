@@ -33,7 +33,7 @@ export default function Home() {
       if (data) {
         setTokenList(data.slice(0, 4));
       }
-    } catch (error) { }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -44,7 +44,9 @@ export default function Home() {
     <div className="w-full space-y-32">
       {/* Section CTA */}
 
-      <div className={`w-full flex items-center max-w-screen-lg mx-auto lg:flex-row flex-col lg:gap-0 gap-16 justify-between lg:h-[85vh] py-8`}>
+      <div
+        className={`w-full flex items-center max-w-screen-lg mx-auto lg:flex-row flex-col lg:gap-0 gap-16 justify-between lg:h-[85vh] py-8`}
+      >
         <div className="space-y-8 text-left lg:w-1/2 w-full">
           <h1 className="text-5xl font-semibold leading-snug">
             Start and Build Your Crypto Portfolio Here
@@ -58,7 +60,25 @@ export default function Home() {
           </Button>
         </div>
         <div className="lg:w-1/2 w-full h-full flex justify-center items-center">
-          <video className="first-img lg:w-[58%]" style={{ visibility: 'visible' }} autoPlay loop muted playsInline poster="https://www.okx.com/cdn/assets/imgs/243/F485DEA432C68FD9.png?x-oss-process=image/format,webp"><source src="https://www.okx.com/cdn/assets/files/243/79620084DA93114F.webm" type="video/webm" /><source src="https://www.okx.com/cdn/assets/files/243/78FBA21FD210816A.mp4" type="video/mp4" /><track kind="captions" /></video>
+          <video
+            className="first-img lg:w-[58%]"
+            style={{ visibility: "visible" }}
+            autoPlay
+            loop
+            muted
+            playsInline
+            poster="https://www.okx.com/cdn/assets/imgs/243/F485DEA432C68FD9.png?x-oss-process=image/format,webp"
+          >
+            <source
+              src="https://www.okx.com/cdn/assets/files/243/79620084DA93114F.webm"
+              type="video/webm"
+            />
+            <source
+              src="https://www.okx.com/cdn/assets/files/243/78FBA21FD210816A.mp4"
+              type="video/mp4"
+            />
+            <track kind="captions" />
+          </video>
         </div>
       </div>
 
@@ -76,7 +96,11 @@ export default function Home() {
                     alt=""
                     className="w-10 h-10 object-cover"
                   />
-                  <p className="font-medium text-xs">{value.name && value.name.length > 10 ? value.name.slice(0, 10) + '...' : value.name}</p>
+                  <p className="font-medium text-xs">
+                    {value.name && value.name.length > 10
+                      ? value.name.slice(0, 10) + "..."
+                      : value.name}
+                  </p>
                   <Badge className="text-xs max-w-24">{value.symbol}</Badge>
                 </div>
                 <button className="bg-foreground/10 p-2 rounded-md hover:bg-foreground/20 transition-colors">
@@ -93,78 +117,6 @@ export default function Home() {
               </div>
             </div>
           ))}
-          {/* <div className="w-full border rounded-md p-3 bg-foreground/5 flex flex-col gap-3">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <img
-                  src="https://www.geckoterminal.com/_next/image?url=https%3A%2F%2Fassets.geckoterminal.com%2F78v65lm9dbzcs74ne2vyra9zj3k2&w=64&q=75"
-                  alt=""
-                  className="w-14 h-14 object-cover"
-                />
-                <p className="font-medium">MUDA</p>
-                <Badge>Mudapedia</Badge>
-              </div>
-              <button className="bg-foreground/10 p-2 rounded-md hover:bg-foreground/20 transition-colors">
-                <ArrowUpRightIcon size={24} />
-              </button>
-            </div>
-            <hr />
-            <div className="flex justify-between items-center">
-              <div className="flex flex-col gap-2">
-                <p className="font-semibold">$56</p>
-                <p className="opacity-80">5.41%</p>
-              </div>
-              <img src="/chart-state 1.svg" alt="" />
-            </div>
-          </div>
-          <div className="w-full border rounded-md p-3 bg-foreground/5 flex flex-col gap-3">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <img
-                  src="https://www.geckoterminal.com/_next/image?url=https%3A%2F%2Fassets.geckoterminal.com%2Fam67zirk2xbaw0hhwupmxqdx7kgm&w=64&q=75"
-                  alt=""
-                  className="w-14 h-14 object-cover"
-                />
-                <p className="font-medium">UTR</p>
-                <Badge>UIStellar</Badge>
-              </div>
-              <button className="bg-foreground/10 p-2 rounded-md hover:bg-foreground/20 transition-colors">
-                <ArrowUpRightIcon size={24} />
-              </button>
-            </div>
-            <hr />
-            <div className="flex justify-between items-center">
-              <div className="flex flex-col gap-2">
-                <p className="font-semibold">$59</p>
-                <p className="opacity-80">3.51%</p>
-              </div>
-              <img src="/chart-state 1.svg" alt="" />
-            </div>
-          </div>
-          <div className="w-full border rounded-md p-3 bg-foreground/5 flex flex-col gap-3">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <img
-                  src="https://www.geckoterminal.com/_next/image?url=https%3A%2F%2Fassets.geckoterminal.com%2Fgx0p0a456zfixw9q34uwakay9qtc&w=64&q=75"
-                  alt=""
-                  className="w-14 h-14 object-cover"
-                />
-                <p className="font-medium">GASVIN</p>
-                <Badge>Gasvin Coin</Badge>
-              </div>
-              <button className="bg-foreground/10 p-2 rounded-md hover:bg-foreground/20 transition-colors">
-                <ArrowUpRightIcon size={24} />
-              </button>
-            </div>
-            <hr />
-            <div className="flex justify-between items-center">
-              <div className="flex flex-col gap-2">
-                <p className="font-semibold">$59</p>
-                <p className="opacity-80">3.41%</p>
-              </div>
-              <img src="/chart-state 1.svg" alt="" />
-            </div>
-          </div> */}
         </div>
       </div>
 
