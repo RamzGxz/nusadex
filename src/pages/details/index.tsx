@@ -142,7 +142,14 @@ export default function index() {
           <SettingsIcon />
         </div>
       </div>
-      <div className="flex flex-row h-[calc(100vh - 118px)] mt-[2px] min-[500px] border-t-2 border-[#6c6c6c]"></div>
+      <div className="flex flex-row h-[calc(100vh - 118px)] mt-[2px] min-[500px] border-t-2 border-[#6c6c6c]">
+        <div className="flex flex-1 gap-[2px] border border-white">
+          <div className="flex flex-col gap-1 w-[280px] order-1 border border-white">
+            <div className="flex-1 pt-4 border border-white"></div>
+            <div className="min-h-[120px] overflow-hidden border border-white"></div>
+          </div>
+        </div>
+      </div>
     </>
   );
 }
