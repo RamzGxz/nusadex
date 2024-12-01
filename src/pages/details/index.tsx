@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React from "react";
+import { TokenSearch } from "@/components/ui/search";
 // import { useEffect, useState } from "react";
 
 export default function index() {
@@ -168,15 +169,12 @@ export default function index() {
                 <div className="mt-2 mx-4 mb-4">
                   <div className="bg-[#1a1a1a] border-transparent box-s"></div>
                 </div>
-
-                <div className="flex items-center w-full max-w-sm">
-                  <div className="relative mr-2">
-                    <SearchIcon className="h-4 w-4 text-gray-500" />
-                  </div>
-                  <Input
-                    type="search"
-                    placeholder="Search..."
-                    className="flex-grow"
+                <div className="max-w-xl mx-auto">
+                  <TokenSearch
+                    className="w-full"
+                    onSearch={(value) => {
+                      console.log("Searching for: ", value);
+                    }}
                   />
                 </div>
                 <TabsContent value="trending"></TabsContent>
