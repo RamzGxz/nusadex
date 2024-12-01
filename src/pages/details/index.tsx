@@ -3,11 +3,14 @@ import {
   CopyIcon,
   EarthIcon,
   Mouse,
+  SearchIcon,
   SettingsIcon,
   StarIcon,
   UploadIcon,
   UsersIcon,
 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React from "react";
 // import { useEffect, useState } from "react";
 
@@ -146,7 +149,39 @@ export default function index() {
         <div className="flex flex-1 gap-[2px] border border-white">
           <div className="flex flex-col gap-1 w-[280px] order-1 border border-white">
             <div className="flex-1 pt-4 border border-white"></div>
-            <div className="min-h-[120px] overflow-hidden border border-white"></div>
+            <div className="min-h-[120px] overflow-hidden border border-white">
+              <Tabs defaultValue="trending" className="w-[280px]">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger
+                    value="trending"
+                    className="data-[state=active]:bg-[#95F121] data-[state=active]:text-[#09090B]"
+                  >
+                    Trending
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="watchlist"
+                    className="data-[state=active]:bg-[#95F121] data-[state=active]:text-[#09090B]"
+                  >
+                    Watchlist
+                  </TabsTrigger>
+                </TabsList>
+                <div className="mt-2 mx-4 mb-4">
+                  <div className="bg-[#1a1a1a] border-transparent box-s"></div>
+                </div>
+
+                <div className="flex items-center w-full max-w-sm">
+                  <div className="relative mr-2">
+                    <SearchIcon className="h-4 w-4 text-gray-500" />
+                  </div>
+                  <Input
+                    type="search"
+                    placeholder="Search..."
+                    className="flex-grow"
+                  />
+                </div>
+                <TabsContent value="trending"></TabsContent>
+              </Tabs>
+            </div>
           </div>
         </div>
       </div>
