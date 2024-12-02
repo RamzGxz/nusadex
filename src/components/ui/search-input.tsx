@@ -36,8 +36,4 @@ export function TokenSearch({
       />
     </div>
   );
-}
-
-// export const search = () => {
-//   return <div>search</div>;
-// };
+};
