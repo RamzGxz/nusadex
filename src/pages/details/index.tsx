@@ -6,6 +6,7 @@ import {
   SettingsIcon,
   StarIcon,
   UploadIcon,
+  User,
   UsersIcon,
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -219,6 +220,14 @@ export default function index() {
                               </div>
                             </div>
                           </div>
+                          <div className="flex flex-col">
+                            <span className="text-sm font-bold overflow-hidden text-right text-ellipsis">
+                              $0.124
+                            </span>
+                            <div className="text-sm text-right">
+                              <div className="text-[#ca3f64]">+25.15%</div>
+                            </div>
+                          </div>
                           <div className="text-right"></div>
                         </div>
                       </div>
@@ -226,6 +235,19 @@ export default function index() {
                   </div>
                 </TabsContent>
               </Tabs>
+            </div>
+            <div className="min-h-[120px] overflow-hidden border border-white">
+              <div className="py-5">
+                <div className="mb-4">
+                  <div className="flex justify-between">
+                    <div className="text-base font-bold ">Suara</div>
+                    <div className="flex items-center text-base font-bold">
+                      <User className="mr-1 text-sm h-[16px]" />
+                      <span className="text-sm font-medium">200</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
