@@ -1,14 +1,5 @@
 import Link from "next/link";
 import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
-import { Button } from "../ui/button";
-import {
   Sheet,
   SheetContent,
   SheetDescription,
@@ -16,7 +7,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { ArrowDown, ArrowLeftRight, ArrowRightLeft, ChevronDown, MenuIcon, NewspaperIcon } from "lucide-react";
+import { ArrowLeftRight, ChevronDown, MenuIcon, NewspaperIcon } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -28,10 +19,12 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from "@/components/ui/tooltip";
+import ModalConnectWallet from "../modals/connectWallet";
 
 
 const Navbar = () => {
+
   return (
     <div className="xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm xl:px-0 lg:px-3 px-6 mx-auto">
       <div className="flex items-center justify-between">
@@ -48,8 +41,8 @@ const Navbar = () => {
               <Tooltip delayDuration={50}>
                 <TooltipTrigger>
                   <div className="flex items-center gap-1 hover:opacity-80">
-                    <p className="font-medium text-sm">Tokens</p>
-                    <ChevronDown size={20} strokeWidth={2} className=""/>
+                    <p className="font-medium text-sm">Trade</p>
+                    <ChevronDown size={20} strokeWidth={2} className="" />
                   </div>
                 </TooltipTrigger>
                 <TooltipContent className="mt-3">
@@ -70,7 +63,7 @@ const Navbar = () => {
                 <TooltipTrigger>
                   <div className="flex items-center gap-1 hover:opacity-80">
                     <p className="font-medium text-sm">News</p>
-                    <ChevronDown size={20} strokeWidth={2} className=""/>
+                    <ChevronDown size={20} strokeWidth={2} className="" />
                   </div>
                 </TooltipTrigger>
                 <TooltipContent className="mt-3">
@@ -90,7 +83,8 @@ const Navbar = () => {
           </div>
 
           <div className="flex gap-3 items-center">
-            <Button size={"sm"}>Connect Wallet</Button>
+            <ModalConnectWallet/>
+
             <div className="lg:hidden block">
               <Sheet>
                 <SheetTrigger>
