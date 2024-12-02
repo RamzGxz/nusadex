@@ -39,7 +39,9 @@ export default function index() {
             </div>
             <div className="flex flex-col shrink ml-5 border border-white">
               <div className=" flex items-center">
-                <div className="inline-flex text-xl font-bold">PavoCoin</div>
+                <div className="inline-flex text-xl font-bold text-[#fff]">
+                  PavoCoin
+                </div>
                 <div className="flex items-center gap-2 shrink-0 ml-2">
                   <StarIcon width={16} height={16} className="text-[#909090]" />
                   <UploadIcon
@@ -175,7 +177,54 @@ export default function index() {
                     }}
                   />
                 </div>
-                <TabsContent value="trending"></TabsContent>
+                <TabsContent value="trending">
+                  <div className="flex justify-between cursor-default py-2">
+                    <div className="text-xs font-normal text-ellipsis text-[#909090]">
+                      Nama
+                    </div>
+                    <div className="text-xs font-normal text-ellipsis text-[#909090]">
+                      Harga/perubahan 24 jam
+                    </div>
+                  </div>
+                  <div className="h-[calc(100vh - 400px)] overflow-auto border-white">
+                    <a href="">
+                      <div className="grid grid-col-[calc(64% - 8px) 36%] gap-2 cursor-pointer py-2">
+                        <div className="flex items-center h-7">
+                          <StarIcon className="text-[#6c6c6c] cursor-pointer text-sm h-[16px]" />
+                          <div className="flex flex-1 w-full max-w-full ml-2">
+                            <div className="flex relative border border-white">
+                              <div className="flex-wrap border border-white">
+                                <img
+                                  src="https://pavocoin.xyz/wp-content/uploads/2024/07/Logo-1-100x100.png"
+                                  alt=""
+                                  width={32}
+                                  height={32}
+                                />
+                              </div>
+                              <div className="flex absolute  -bottom-1 -right-1 border border-white">
+                                <img
+                                  src="https://logos-world.net/wp-content/uploads/2024/01/Solana-Logo.png"
+                                  alt=""
+                                  width={22}
+                                  height={22}
+                                />
+                              </div>
+                            </div>
+                            <div className="flex flex-col ml-3 overflow-hidden">
+                              <div className="text-sm font-medium overflow-hidden text-ellipsis whitespace-nowrap	text-[#fff]">
+                                PavoCoin
+                              </div>
+                              <div className="text-sm font-medium overflow-hidden text-ellipsis whitespace-nowrap	text-[#909090]">
+                                Solana
+                              </div>
+                            </div>
+                          </div>
+                          <div className=""></div>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                </TabsContent>
               </Tabs>
             </div>
           </div>
