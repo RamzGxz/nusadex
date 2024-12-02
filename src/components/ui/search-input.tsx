@@ -31,7 +31,7 @@ export function TokenSearch({
       <Input
         value={value}
         onChange={handleSearch}
-        className="pl-9 bg-background"
+        className="pl-9 bg-[#1a1a1a]"
         placeholder="Search token name or address"
       />
     </div>
