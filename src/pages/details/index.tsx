@@ -3,16 +3,14 @@ import {
   CopyIcon,
   EarthIcon,
   Mouse,
-  SearchIcon,
   SettingsIcon,
   StarIcon,
   UploadIcon,
   UsersIcon,
 } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React from "react";
-import { TokenSearch } from "@/components/ui/search";
+import { TokenSearch } from "@/components/ui/search-input";
 // import { useEffect, useState } from "react";
 
 export default function index() {
