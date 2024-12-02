@@ -219,7 +219,7 @@ export default function index() {
                               </div>
                             </div>
                           </div>
-                          <div className=""></div>
+                          <div className="text-right"></div>
                         </div>
                       </div>
                     </a>

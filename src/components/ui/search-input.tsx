@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { SearchIcon } from "lucide-react";
+import { SearchIcon, XIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
@@ -34,6 +34,18 @@ export function TokenSearch({
         className="pl-9 bg-[#1a1a1a]"
         placeholder="Search token name or address"
       />
+      {value && (
+        <button
+          onClick={() => {
+            setValue("");
+            onSearch?.("");
+          }}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+        >
+          <XIcon className="h-4 w-4" />
+          <span className="sr-only">Clear search</span>
+        </button>
+      )}
     </div>
   );
-};
+}
