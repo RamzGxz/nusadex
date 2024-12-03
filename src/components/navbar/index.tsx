@@ -21,20 +21,24 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import ModalConnectWallet from "../modals/connectWallet";
+import { useState } from "react";
 
 
 const Navbar = () => {
+  const [sheetOpen, setSheetOpen] = useState(false)
 
   return (
     <div className="xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm xl:px-0 lg:px-3 px-6 mx-auto">
       <div className="flex items-center justify-between">
-        <img src="/logo-nusadex-text.svg" alt="" className="w-[150px]" />
+        <Link href={'/'}>
+          <img src="/logo-nusadex-text.svg" alt="" className="w-[150px]" />
+        </Link>
         <div className="flex items-center gap-3">
           <div className="lg:flex hidden  items-center gap-3">
-            <Link href={"/"} className="font-medium hover:opacity-80 transition-opacity text-sm pb-0" >
+            <Link href={"/tokens"} className="font-medium hover:opacity-80 transition-opacity text-sm pb-0" >
               Tokens
             </Link>
-            <Link href={"/"} className="font-medium hover:opacity-80 transition-opacity text-sm pb-0" >
+            <Link href={"/exchange"} className="font-medium hover:opacity-80 transition-opacity text-sm pb-0" >
               Exchange
             </Link>
             <TooltipProvider>
@@ -83,10 +87,10 @@ const Navbar = () => {
           </div>
 
           <div className="flex gap-3 items-center">
-            <ModalConnectWallet/>
+            <ModalConnectWallet />
 
             <div className="lg:hidden block">
-              <Sheet>
+              <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
                 <SheetTrigger>
                   <MenuIcon size={28} />
                 </SheetTrigger>
@@ -103,7 +107,7 @@ const Navbar = () => {
                               </h1>
                             </AccordionTrigger>
                             <AccordionContent>
-                              <Link href={""}>
+                              <Link href={"/tokens"} onClick={() => setSheetOpen(false)}>
                                 <h4 className="">View All Tokens</h4>
                               </Link>
                             </AccordionContent>
@@ -115,7 +119,7 @@ const Navbar = () => {
                               </h1>
                             </AccordionTrigger>
                             <AccordionContent>
-                              <Link href={""}>
+                              <Link href={"/swap"} onClick={() => setSheetOpen(false)}>
                                 <h4 className="">Swap</h4>
                               </Link>
                             </AccordionContent>
@@ -127,8 +131,20 @@ const Navbar = () => {
                               </h1>
                             </AccordionTrigger>
                             <AccordionContent>
-                              <Link href={""}>
+                              <Link href={"/news"} onClick={() => setSheetOpen(false)}>
                                 <h4 className="">All Trending News</h4>
+                              </Link>
+                            </AccordionContent>
+                          </AccordionItem>
+                          <AccordionItem value="item-4">
+                            <AccordionTrigger>
+                              <h1 className="font-semibold opacity-50 hover:opacity-100 transition-opacity">
+                                Exchange
+                              </h1>
+                            </AccordionTrigger>
+                            <AccordionContent>
+                              <Link href={"/exchange"} onClick={() => setSheetOpen(false)}>
+                                <h4 className="">Fast & Smart Exchange</h4>
                               </Link>
                             </AccordionContent>
                           </AccordionItem>
