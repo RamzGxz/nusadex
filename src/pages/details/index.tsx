@@ -12,16 +12,17 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React from "react";
 import { TokenSearch } from "@/components/ui/search-input";
+import { Votes } from "@/components/details/votes";
 // import { useEffect, useState } from "react";
 
 export default function index() {
   return (
     <>
-      <div className="w-full flex items-center justify-between py-2 border border-white">
-        <div className="flex flex-1 items-center justify-between border border-white">
-          <div className="flex items-center pr-4 border-white">
-            <div className="flex relative border border-white">
-              <div className="flex-wrap border border-white">
+      <div className="w-full flex items-center justify-between py-2 ">
+        <div className="flex flex-1 items-center justify-between ">
+          <div className="flex items-center pr-4 ">
+            <div className="flex relative ">
+              <div className="flex-wrap ">
                 <img
                   src="https://pavocoin.xyz/wp-content/uploads/2024/07/Logo-1-100x100.png"
                   alt=""
@@ -29,7 +30,7 @@ export default function index() {
                   height={50}
                 />
               </div>
-              <div className="flex absolute  -bottom-1 -right-1 border border-white">
+              <div className="flex absolute  -bottom-1 -right-1 ">
                 <img
                   src="https://logos-world.net/wp-content/uploads/2024/01/Solana-Logo.png"
                   alt=""
@@ -38,7 +39,7 @@ export default function index() {
                 />
               </div>
             </div>
-            <div className="flex flex-col shrink ml-5 border border-white">
+            <div className="flex flex-col shrink ml-5 ">
               <div className=" flex items-center">
                 <div className="inline-flex text-xl font-bold text-[#fff]">
                   PavoCoin
@@ -148,11 +149,11 @@ export default function index() {
         </div>
       </div>
       <div className="flex flex-row h-[calc(100vh - 118px)] mt-[2px] min-[500px] border-t-2 border-[#6c6c6c]">
-        <div className="flex flex-1 gap-[2px] border border-white">
-          <div className="flex flex-col gap-1 w-[280px] order-1 border border-white">
-            <div className="flex-1 pt-4 border border-white"></div>
-            <div className="min-h-[120px] overflow-hidden border border-white">
-              <Tabs defaultValue="trending" className="w-[280px]">
+        <div className="flex flex-1 gap-[2px]">
+          <div className="flex flex-col gap-1 w-[280px] order-1  border-r-2 border-[#6c6c6c]">
+            <div className="flex-1 pt-4"></div>
+            <div className="min-h-[120px] overflow-hidden">
+              <Tabs defaultValue="trending" className="w-[280px] px-2">
                 <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger
                     value="trending"
@@ -187,14 +188,14 @@ export default function index() {
                       Harga/perubahan 24 jam
                     </div>
                   </div>
-                  <div className="h-[calc(100vh - 400px)] overflow-auto border-white">
+                  <div className="h-[calc(100vh - 400px)] overflow-auto">
                     <a href="">
                       <div className="grid grid-col-[calc(64% - 8px) 36%] gap-2 cursor-pointer py-2">
                         <div className="flex items-center h-7">
                           <StarIcon className="text-[#6c6c6c] cursor-pointer text-sm h-[16px]" />
                           <div className="flex flex-1 w-full max-w-full ml-2">
-                            <div className="flex relative border border-white">
-                              <div className="flex-wrap border border-white">
+                            <div className="flex relative">
+                              <div className="flex-wrap">
                                 <img
                                   src="https://pavocoin.xyz/wp-content/uploads/2024/07/Logo-1-100x100.png"
                                   alt=""
@@ -202,7 +203,7 @@ export default function index() {
                                   height={32}
                                 />
                               </div>
-                              <div className="flex absolute  -bottom-1 -right-1 border border-white">
+                              <div className="flex absolute bottom-1 -right-1">
                                 <img
                                   src="https://logos-world.net/wp-content/uploads/2024/01/Solana-Logo.png"
                                   alt=""
@@ -234,17 +235,21 @@ export default function index() {
                     </a>
                   </div>
                 </TabsContent>
+                <TabsContent value="watchlist">Kontol</TabsContent>
               </Tabs>
             </div>
-            <div className="min-h-[120px] overflow-hidden border border-white">
-              <div className="py-5">
+            <div className="min-h-[120px] overflow-hidden border-t-2 border-[#6c6c6c]">
+              <div className="px-2 py-5">
                 <div className="mb-4">
-                  <div className="flex justify-between">
+                  <div className="flex justify-between mb-4">
                     <div className="text-base font-bold ">Suara</div>
                     <div className="flex items-center text-base font-bold">
                       <User className="mr-1 text-sm h-[16px]" />
                       <span className="text-sm font-medium">200</span>
                     </div>
+                  </div>
+                  <div className="w-full">
+                    <Votes />
                   </div>
                 </div>
               </div>
