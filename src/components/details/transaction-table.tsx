@@ -34,7 +34,7 @@ type SortDirection = "asc" | "desc" | null;
 
 const transactions: Transaction[] = [
   {
-    time: "35s",
+    time: "30s",
     type: "Sell",
     amount: {
       value: -0.529666,
@@ -45,7 +45,18 @@ const transactions: Transaction[] = [
     address: "4GXGV2...US9f",
   },
   {
-    time: "30s",
+    time: "50s",
+    type: "Buy",
+    amount: {
+      value: 105.1178,
+      currency: "CHILLGUY",
+    },
+    price: 0.45716,
+    value: 48.05,
+    address: "3ATiCn...yjYb",
+  },
+  {
+    time: "1m 30s",
     type: "Buy",
     amount: {
       value: 105.1178,
@@ -60,16 +71,14 @@ const transactions: Transaction[] = [
 export default function TransactionTable() {
   const [timeSort, setTimeSort] = useState<SortDirection>("asc");
 
-  // const [timeSort, setTimeSort] = useState<"asc" | "desc" | null>(null);
-
   const handleSortClick = (direction: "asc" | "desc") => {
     setTimeSort((current) => (current === direction ? null : direction));
   };
 
   const sortedTransactions = [...transactions].sort((a, b) => {
-    if (timeSort === "asc") {
+    if (timeSort === "desc") {
       return a.time.localeCompare(b.time);
-    } else if (timeSort === "desc") {
+    } else if (timeSort === "asc") {
       return b.time.localeCompare(a.time);
     }
     return 0;

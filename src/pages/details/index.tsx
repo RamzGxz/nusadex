@@ -279,8 +279,10 @@ export default function index() {
           </div>
           {/* Mid */}
           <div className="flex flex-col w-[790px] order-2">
-            <div className="flex flex-1 m-2 pt-4 border border-white justify-center items-center">
-              Chart
+            <div>
+              <div className="flex flex-1 m-2 pt-4 border border-white justify-center items-center">
+                Chart
+              </div>
             </div>
             <div className="min-h-[120px] overflow-hidden p-2">
               <Tabs defaultValue="history" className="w-full">
