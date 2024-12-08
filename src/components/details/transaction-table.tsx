@@ -1,6 +1,12 @@
 "use client";
 
-import { ArrowDownUp, ArrowUpDown, ExternalLink } from "lucide-react";
+import {
+  ArrowDownUp,
+  ChevronUp,
+  ChevronDown,
+  ExternalLink,
+  ArrowUpDown,
+} from "lucide-react";
 import {
   Table,
   TableBody,
@@ -10,6 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
 
 interface Transaction {
   time: string;
@@ -23,9 +30,11 @@ interface Transaction {
   address: string;
 }
 
+type SortDirection = "asc" | "desc" | null;
+
 const transactions: Transaction[] = [
   {
-    time: "30s",
+    time: "35s",
     type: "Sell",
     amount: {
       value: -0.529666,
@@ -49,31 +58,69 @@ const transactions: Transaction[] = [
 ];
 
 export default function TransactionTable() {
+  const [timeSort, setTimeSort] = useState<SortDirection>("asc");
+
+  // const [timeSort, setTimeSort] = useState<"asc" | "desc" | null>(null);
+
+  const handleSortClick = (direction: "asc" | "desc") => {
+    setTimeSort((current) => (current === direction ? null : direction));
+  };
+
+  const sortedTransactions = [...transactions].sort((a, b) => {
+    if (timeSort === "asc") {
+      return a.time.localeCompare(b.time);
+    } else if (timeSort === "desc") {
+      return b.time.localeCompare(a.time);
+    }
+    return 0;
+  });
+
   return (
-    <div className="rounded-lg border bg-background">
+    <div className="rounded-lg bg-background">
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent">
-            <TableHead className="w-[100px]">
+            <TableHead className="flex w-[100px] items-center cursor-pointer">
               Time
-              <ArrowUpDown className="ml-1 h-4 w-4 inline-block" />
+              <div className="flex flex-col ml-1 -space-y-1">
+                <ChevronUp
+                  className={`h-3 w-3 ${
+                    timeSort === "asc" ? "text-[#95F121]" : ""
+                  }`}
+                  onClick={() => handleSortClick("asc")}
+                  strokeWidth={timeSort === "asc" ? 3 : 2}
+                />
+                <ChevronDown
+                  className={`h-3 w-3 ${
+                    timeSort === "desc" ? "text-[#95F121]" : ""
+                  }`}
+                  onClick={() => handleSortClick("desc")}
+                  strokeWidth={timeSort === "desc" ? 3 : 2}
+                />
+              </div>
             </TableHead>
             <TableHead>Type</TableHead>
             <TableHead>Amount</TableHead>
             <TableHead>Price</TableHead>
             <TableHead>
               Value
-              <ArrowUpDown className="ml-1 h-4 w-4 inline-block" />
+              <ArrowUpDown
+                className="ml-1 h-4 w-4 inline-block"
+                strokeWidth={2}
+              />
             </TableHead>
             <TableHead>
               Address
-              <ArrowUpDown className="ml-1 h-4 w-4 inline-block" />
+              <ArrowUpDown
+                className="ml-1 h-4 w-4 inline-block"
+                strokeWidth={2}
+              />
             </TableHead>
             <TableHead className="text-right">Info</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {transactions.map((transaction, index) => (
+          {sortedTransactions.map((transaction, index) => (
             <TableRow key={index} className="hover:bg-muted/50">
               <TableCell className="font-medium">{transaction.time}</TableCell>
               <TableCell>

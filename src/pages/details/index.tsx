@@ -8,7 +8,6 @@ import {
   UploadIcon,
   User,
   UsersIcon,
-  Wallet,
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React from "react";
@@ -33,7 +32,7 @@ export default function index() {
                   height={50}
                 />
               </div>
-              <div className="flex absolute  -bottom-1 -right-1 ">
+              <div className="flex absolute -bottom-1 -right-1 ">
                 <img
                   src="https://logos-world.net/wp-content/uploads/2024/01/Solana-Logo.png"
                   alt=""
