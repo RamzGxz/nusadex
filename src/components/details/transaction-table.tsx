@@ -137,8 +137,8 @@ export default function TransactionTable() {
                   variant="outline"
                   className={
                     transaction.type === "Buy"
-                      ? "text-green-500 border-green-500"
-                      : "text-red-500 border-red-500"
+                      ? "text-[#03a66d] border-[#03a66d]"
+                      : "text-[#f23645] border-[#f23645]"
                   }
                 >
                   {transaction.type}
@@ -148,8 +148,8 @@ export default function TransactionTable() {
                 <div
                   className={
                     transaction.type === "Buy"
-                      ? "text-green-500"
-                      : "text-red-500"
+                      ? "text-[#03a66d]"
+                      : "text-[#f23645]"
                   }
                 >
                   {transaction.amount.value}
