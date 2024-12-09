@@ -45,12 +45,12 @@ export default function HolderTabs() {
       <Table>
         <TableHeader>
           <TableRow className="border-neutral-800 hover:bg-neutral-900">
-            <TableHead className="text-neutral-400">Rank</TableHead>
-            <TableHead className="text-neutral-400">Address</TableHead>
-            <TableHead className="text-neutral-400">Holding%</TableHead>
-            <TableHead className="text-neutral-400">Amount</TableHead>
-            <TableHead className="text-neutral-400">24h change</TableHead>
-            <TableHead className="text-neutral-400">Info</TableHead>
+            <TableHead className="text-neutral-100">Rank</TableHead>
+            <TableHead className="text-neutral-100">Address</TableHead>
+            <TableHead className="text-neutral-100">Holding%</TableHead>
+            <TableHead className="text-neutral-100">Amount</TableHead>
+            <TableHead className="text-neutral-100">24h change</TableHead>
+            <TableHead className="text-neutral-100">Info</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -96,18 +96,6 @@ export default function HolderTabs() {
               <TableCell>
                 <TooltipProvider>
                   <div className="flex items-center gap-2">
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-neutral-400 hover:text-neutral-200"
-                        >
-                          <Copy className="h-4 w-4" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>Copy Address</TooltipContent>
-                    </Tooltip>
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Button

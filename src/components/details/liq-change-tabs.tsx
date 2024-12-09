@@ -24,10 +24,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
+import { Button } from "../ui/button";
 
 interface Transaction {
   time: string;
-  type: "Buy" | "Sell";
+  type: "Add" | "Remove";
   amount: {
     value: number;
     currency: string;
@@ -38,12 +45,12 @@ interface Transaction {
 }
 
 type SortDirection = "asc" | "desc" | null;
-type FilterType = "all" | "buy" | "sell";
+type FilterType = "all" | "add" | "remove";
 
 const transactions: Transaction[] = [
   {
     time: "30s",
-    type: "Sell",
+    type: "Add",
     amount: {
       value: -0.529666,
       currency: "PavoCoin",
@@ -54,7 +61,7 @@ const transactions: Transaction[] = [
   },
   {
     time: "50s",
-    type: "Buy",
+    type: "Remove",
     amount: {
       value: 105.1178,
       currency: "PavoCoin",
@@ -123,13 +130,13 @@ export default function LiquidityChangeTabs() {
                     All{" "}
                     {typeFilter === "all" && <Check className="w-4 h-4 ml-2" />}
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setTypeFilter("buy")}>
+                  <DropdownMenuItem onClick={() => setTypeFilter("add")}>
                     Buy{" "}
-                    {typeFilter === "buy" && <Check className="w-4 h-4 ml-2" />}
+                    {typeFilter === "add" && <Check className="w-4 h-4 ml-2" />}
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setTypeFilter("sell")}>
+                  <DropdownMenuItem onClick={() => setTypeFilter("remove")}>
                     Sell{" "}
-                    {typeFilter === "sell" && (
+                    {typeFilter === "remove" && (
                       <Check className="w-4 h-4 ml-2" />
                     )}
                   </DropdownMenuItem>
@@ -137,7 +144,7 @@ export default function LiquidityChangeTabs() {
               </DropdownMenu>
             </TableHead>
             <TableHead
-              className="flex w-[100px] items-center cursor-pointer select-none"
+              className="flex w-[100px] items-center cursor-pointer select-none text-neutral-100"
               onClick={() => {
                 handleSortClick();
                 setValueSort(null);
@@ -159,9 +166,9 @@ export default function LiquidityChangeTabs() {
                 />
               </div>
             </TableHead>
-            <TableHead>Amount</TableHead>
+            <TableHead className="text-neutral-100">Amount</TableHead>
             <TableHead
-              className="flex items-center cursor-pointer select-none"
+              className="flex items-center cursor-pointer select-none text-neutral-100"
               onClick={handleValueSortClick}
             >
               Value
@@ -180,8 +187,8 @@ export default function LiquidityChangeTabs() {
                 />
               </div>
             </TableHead>
-            <TableHead>Address</TableHead>
-            <TableHead className="text-right">Info</TableHead>
+            <TableHead className="text-neutral-100">Address</TableHead>
+            <TableHead className="text-right text-neutral-100">Info</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -191,7 +198,7 @@ export default function LiquidityChangeTabs() {
                 <Badge
                   variant="outline"
                   className={
-                    transaction.type === "Buy"
+                    transaction.type === "Add"
                       ? "text-[#03a66d] border-[#03a66d]"
                       : "text-[#f23645] border-[#f23645]"
                   }
@@ -203,7 +210,7 @@ export default function LiquidityChangeTabs() {
               <TableCell>
                 <div
                   className={
-                    transaction.type === "Buy"
+                    transaction.type === "Add"
                       ? "text-[#03a66d]"
                       : "text-[#f23645]"
                   }
@@ -217,12 +224,35 @@ export default function LiquidityChangeTabs() {
               <TableCell>${transaction.value.toFixed(5)}</TableCell>
               <TableCell>
                 <div className="flex items-center gap-2">
-                  {transaction.address}
-                  <Copy className="h-3 w-3" />
+                  <span className="text-neutral-200">
+                    {transaction.address}
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-4 w-4 text-neutral-400 hover:text-neutral-200"
+                  >
+                    <Copy className="h-3 w-3" />
+                  </Button>
                 </div>
               </TableCell>
               <TableCell className="text-right">
-                <ExternalLink className="h-4 w-4 inline-block" />
+                <TooltipProvider>
+                  <div className="flex items-center gap-2">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-neutral-400 hover:text-neutral-200"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>View Details</TooltipContent>
+                    </Tooltip>
+                  </div>
+                </TooltipProvider>
               </TableCell>
             </TableRow>
           ))}

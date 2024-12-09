@@ -24,6 +24,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Button } from "../ui/button";
 
 interface Transaction {
   time: string;
@@ -219,8 +220,16 @@ export default function HistoryTabs() {
               <TableCell>${transaction.value.toFixed(5)}</TableCell>
               <TableCell>
                 <div className="flex items-center gap-2">
-                  {transaction.address}
-                  <Copy className="h-3 w-3" />
+                  <span className="text-neutral-200">
+                    {transaction.address}
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-4 w-4 text-neutral-400 hover:text-neutral-200"
+                  >
+                    <Copy className="h-3 w-3" />
+                  </Button>
                 </div>
               </TableCell>
               <TableCell className="text-right">
