@@ -1,23 +1,38 @@
 import {
-  CirclePlusIcon,
-  CopyIcon,
-  EarthIcon,
+  Circle,
+  CirclePlus,
+  Copy,
+  Earth,
   Mouse,
-  SettingsIcon,
-  StarIcon,
-  UploadIcon,
+  Settings,
+  Star,
+  Upload,
   User,
-  UsersIcon,
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React from "react";
 import { TokenSearch } from "@/components/ui/search-input";
 import { Votes } from "@/components/details/votes";
-import TransactionTable from "@/components/details/transaction-table";
 import { Button } from "@/components/ui/button";
+import HistoryTabs from "@/components/details/history-tabs";
+import LiquidityChangeTabs from "@/components/details/liq-change-tabs";
+import HolderTabs from "@/components/details/holder-tabs";
 // import { useEffect, useState } from "react";
 
 export default function index() {
+  const textToCopy = "GzY1Kbkg...dDVuvPma"; // Teks yang akan disalin
+
+  const handleCopy = () => {
+    // Salin teks ke clipboard
+    navigator.clipboard
+      .writeText(textToCopy)
+      .then(() => {
+        alert("Teks berhasil disalin!");
+      })
+      .catch((error) => {
+        console.error("Gagal menyalin teks: ", error);
+      });
+  };
   return (
     <>
       <div className="w-full flex items-center justify-between py-2 ">
@@ -47,21 +62,18 @@ export default function index() {
                   PavoCoin
                 </div>
                 <div className="flex items-center gap-2 shrink-0 ml-2">
-                  <StarIcon width={16} height={16} className="text-[#909090]" />
-                  <UploadIcon
-                    width={16}
-                    height={16}
-                    className="text-[#909090]"
-                  />
+                  <Star width={16} height={16} className="text-[#909090]" />
+                  <Upload width={16} height={16} className="text-[#909090]" />
                 </div>
               </div>
               <div className="flex flex-wrap items-center gap-1">
                 <div className="flex items-center text-sm">
-                  <span className="text-[#909090]">GzY1Kbkg...dDVuvPma</span>
-                  <CopyIcon
+                  <span className="text-[#909090]">{textToCopy}</span>
+                  <Copy
                     width={16}
                     height={16}
-                    className="ml-1 text-[#909090]"
+                    className="ml-1 text-[#909090] cursor-pointer"
+                    onClick={handleCopy}
                   />
                 </div>
                 <div className="bg-[#2e2e2e] h-3 w-[1px] mx-1"></div>
@@ -73,13 +85,13 @@ export default function index() {
                     </div>
                   </div>
                   <div className="flex items-center gap-1 rounded bg-[#1a1a1a] py-1 px-2  ">
-                    <CirclePlusIcon className="text-sm h-[14px]" />
+                    <CirclePlus className="text-sm h-[14px]" />
                     <div>
                       Snipers : <span className="text-[#95F121]">0 / 1</span>
                     </div>
                   </div>
                   <div className="flex items-center gap-1 rounded bg-[#1a1a1a] py-1 px-2  ">
-                    <UsersIcon className="text-sm h-[14px]" />
+                    <User className="text-sm h-[14px]" />
                     <div>
                       Top Holders :{" "}
                       <span className="text-[#95F121]">15.5%</span>
@@ -88,7 +100,7 @@ export default function index() {
                   <div className="flex items-center rounded bg-[#1a1a1a]  gap-0 p-0">
                     <div className="py-1 px-[6px]">
                       <a href="">
-                        <EarthIcon className="text-sm h-[14px]" />
+                        <Earth className="text-sm h-[14px]" />
                       </a>
                     </div>
                     <div className="bg-[#6c6c6c] h-3 w-[1px]"></div>
@@ -147,7 +159,7 @@ export default function index() {
           </div>
         </div>
         <div className="ml-0 pl-80">
-          <SettingsIcon />
+          <Settings />
         </div>
       </div>
       <div className="flex flex-row h-[calc(100vh - 118px)] mt-[2px] min-[500px] border-t-2 border-b-2 border-[#6c6c6c]">
@@ -194,7 +206,7 @@ export default function index() {
                       <a href="">
                         <div className="grid grid-col-[calc(64% - 8px) 36%] gap-2 cursor-pointer py-2">
                           <div className="flex items-center h-7">
-                            <StarIcon className="text-[#6c6c6c] cursor-pointer text-sm h-[16px]" />
+                            <Star className="text-[#6c6c6c] cursor-pointer text-sm h-[16px]" />
                             <div className="flex flex-1 w-full max-w-full ml-2">
                               <div className="flex relative">
                                 <div className="flex-wrap">
@@ -279,10 +291,8 @@ export default function index() {
           </div>
           {/* Mid */}
           <div className="flex flex-col w-[790px] order-2">
-            <div>
-              <div className="flex flex-1 m-2 pt-4 border border-white justify-center items-center">
-                Chart
-              </div>
+            <div className="flex flex-1 m-2 pt-4 border border-white justify-center items-center">
+              Chart
             </div>
             <div className="min-h-[120px] overflow-hidden p-2">
               <Tabs defaultValue="history" className="w-full">
@@ -313,16 +323,33 @@ export default function index() {
                   </TabsTrigger>
                 </TabsList>
                 <TabsContent value="history">
-                  <TransactionTable />
+                  <HistoryTabs />
                 </TabsContent>
                 <TabsContent value="liquidity-change">
-                  Change your password here.
+                  <LiquidityChangeTabs />
                 </TabsContent>
                 <TabsContent value="my-position">
-                  Make changes to your account here.
+                  <div className="my-14">
+                    <div className="flex items-center justify-center flex-col">
+                      <div className="text-center">
+                        <img
+                          src="/wallet-crypto.png"
+                          alt="wallet-cryptos"
+                          className="h-[72px] mx-auto"
+                        />
+                        <div className="text-lg mt-2">Watchlist empty</div>
+                        <div className="text-xs mt-2">
+                          Connect your wallet to manage Watchlist.
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex justify-center mt-5">
+                      <Button className="mx-auto">Connect wallet</Button>
+                    </div>
+                  </div>
                 </TabsContent>
                 <TabsContent value="holders">
-                  Change your password here.
+                  <HolderTabs />
                 </TabsContent>
               </Tabs>
             </div>
