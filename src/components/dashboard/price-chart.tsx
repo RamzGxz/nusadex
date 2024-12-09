@@ -30,20 +30,7 @@ const PriceChart = () => {
         <div>
             <Card className="w-full bg-black border-zinc-800">
                 <CardContent className="p-6">
-                    <div className="flex gap-2 mb-4">
-                        {timeRanges.map((range) => (
-                            <Button
-                                key={range.value}
-                                variant={timeRange === range.value ? "secondary" : "ghost"}
-                                size="sm"
-                                onClick={() => setTimeRange(range.value)}
-                                className="text-zinc-400 hover:text-white"
-                            >
-                                {range.label}
-                            </Button>
-                        ))}
-                    </div>
-                    <div className="h-[200px] w-full">
+                    <div className="h-[150px] w-full">
                         <ResponsiveContainer width="100%" height="100%">
                             <LineChart data={data}>
                                 <XAxis
@@ -61,15 +48,28 @@ const PriceChart = () => {
                                     domain={['auto', 'auto']}
                                 />
                                 <Line
-                                    type="monotone"
+                                    type="monotoneX"
                                     dataKey="price"
-                                    stroke="#ff00ff"
+                                    stroke="#06D001"
                                     strokeWidth={2}
                                     dot={false}
                                     filter="drop-shadow(0 0 6px rgba(255, 0, 255, 0.7))"
                                 />
                             </LineChart>
                         </ResponsiveContainer>
+                    </div>
+                    <div className="flex gap-2 mb-4">
+                        {timeRanges.map((range) => (
+                            <Button
+                                key={range.value}
+                                variant={timeRange === range.value ? "secondary" : "ghost"}
+                                size="sm"
+                                onClick={() => setTimeRange(range.value)}
+                                className="text-zinc-400 hover:text-white"
+                            >
+                                {range.label}
+                            </Button>
+                        ))}
                     </div>
                 </CardContent>
             </Card>

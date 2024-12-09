@@ -7,6 +7,7 @@ import { CopyIcon, Wallet, Trash } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { Avatar, AvatarImage, } from "@/components/ui/avatar"
 import { Switch } from "@/components/ui/switch"
+import SearchContractAddres from './search-contract-addres';
 
 const WalletManagement = () => {
     return (
@@ -41,9 +42,9 @@ const WalletManagement = () => {
                                             </div>
                                         </div>
                                         <div className="flex">
-                                            <Button variant={"ghost"}>
-                                                <CopyIcon />
-                                            </Button>
+                                            {/* <Button variant={"ghost"} className='hover:bg-transparent'> */}
+                                                <SearchContractAddres/>
+                                            {/* </Button> */}
                                             <Button variant={"ghost"}>
                                                 <Trash />
                                             </Button>
