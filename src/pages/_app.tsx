@@ -10,57 +10,33 @@ import { useEffect, useMemo } from "react";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import { SessionProvider } from 'next-auth/react'
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   const network = WalletAdapterNetwork.Mainnet;
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
   const wallets = useMemo(
-    () => [new UnsafeBurnerWalletAdapter(), new PhantomWalletAdapter(), new SolflareWalletAdapter(), new BitgetWalletAdapter(), new AlphaWalletAdapter(), new BitpieWalletAdapter(), new AvanaWalletAdapter(), new CloverWalletAdapter(), new Coin98WalletAdapter(), new CoinhubWalletAdapter(), new TrustWalletAdapter()],
+    () => [new PhantomWalletAdapter(), new SolflareWalletAdapter(), new BitgetWalletAdapter(), new AlphaWalletAdapter(), new BitpieWalletAdapter(), new AvanaWalletAdapter(), new CloverWalletAdapter(), new Coin98WalletAdapter(), new CoinhubWalletAdapter(), new TrustWalletAdapter()],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [network]
   )
 
-  useEffect(() => {
-    const handleError = (event: { preventDefault: () => void; error: any; }) => {
-      event.preventDefault(); // Cegah error overlay
-      console.error("Global error:", event.error);
-    };
-
-    const handleRejection = (event: { preventDefault: () => void; reason: any; }) => {
-      event.preventDefault(); // Cegah unhandled promise overlay
-      console.error("Unhandled promise rejection:", event.reason);
-    };
-
-    window.addEventListener("error", handleError);
-    window.addEventListener("unhandledrejection", handleRejection);
-
-    return () => {
-      window.removeEventListener("error", handleError);
-      window.removeEventListener("unhandledrejection", handleRejection);
-    };
-  }, []);
-
 
   return (
-    <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider wallets={wallets} onError={(error) => {
-        if (error.name === 'WalletNotSelectedError') {
-          return
-        }
-        toast.error(error.message)
-        console.log({ error })
-      }}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange>
-          <ToastContainer draggable theme="dark" />
-          <AppShell>
-            <Component {...pageProps} />
-          </AppShell>
-        </ThemeProvider>
-      </WalletProvider>
-    </ConnectionProvider>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="dark"
+      disableTransitionOnChange>
+      <SessionProvider session={session}>
+        <ToastContainer draggable theme="dark" />
+        <ConnectionProvider endpoint={endpoint}>
+          <WalletProvider wallets={wallets} autoConnect localStorageKey="wadaw">
+            <AppShell>
+              <Component {...pageProps} />
+            </AppShell>
+          </WalletProvider>
+        </ConnectionProvider>
+      </SessionProvider>
+    </ThemeProvider>
   );
 }

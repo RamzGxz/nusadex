@@ -21,11 +21,60 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import ModalConnectWallet from "../modals/connectWallet";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import ModalLoginReg from "../modals/loginReg";
+import { useSession } from "next-auth/react";
+import { UserDataType } from "@/types/userDataTypes";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 
 const Navbar = () => {
   const [sheetOpen, setSheetOpen] = useState(false)
+  const [balance, setBalance] = useState(0)
+  const { pathname } = useRouter()
+  const { data: session, status }: any = useSession()
+  const [userData, setuserData] = useState<UserDataType>({} as UserDataType)
+
+
+  // const { connect, connecting, select, wallets, connected, publicKey, disconnect } = useWallet()
+  // const getSolBalance = async () => {
+  //   if (connected && publicKey) {
+  //     try {
+  //       const balance = await wallet.getBalance(publicKey.toBase58())
+  //       setBalance(Number(balance))
+  //       return
+  //     } catch (error) {
+  //       console.log(error)
+  //     }
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   if (connected && publicKey && balance === 0) {
+  //     getSolBalance()
+  //   }
+  // }, [connected, publicKey, balance])
+
+  const getUserData = async () => {
+    if (status === 'authenticated') {
+      try {
+        const resp = await axios(`/api/users/get/${session?.user.id}`)
+        setuserData(resp.data)
+        console.log(resp.data)
+      } catch (error) {
+        toast.error('Error while fetching user data!')
+        console.log(error)
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      getUserData()
+    }
+  }, [status])
 
   return (
     <div className="xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm xl:px-0 lg:px-3 px-6 mx-auto">
@@ -51,7 +100,7 @@ const Navbar = () => {
                 </TooltipTrigger>
                 <TooltipContent className="mt-3">
                   <div className="space-y-5">
-                    <Link href={'/'} className="flex items-center gap-3 hover:bg-muted-foreground/10 p-2 rounded-md">
+                    <Link href={'/swap'} className="flex items-center gap-3 hover:bg-muted-foreground/30 transition-colors p-2 rounded-md">
                       <ArrowLeftRight strokeWidth={2} size={20} />
                       <div className="">
                         <p className="font-medium">Swap</p>
@@ -72,7 +121,7 @@ const Navbar = () => {
                 </TooltipTrigger>
                 <TooltipContent className="mt-3">
                   <div className="space-y-5">
-                    <Link href={'/'} className="flex items-center gap-3 hover:bg-muted-foreground/10 p-2 rounded-md">
+                    <Link href={'/news'} className="flex items-center gap-3 hover:bg-muted-foreground/30 transition-colors p-2 rounded-md">
                       <NewspaperIcon strokeWidth={2} size={20} />
                       <div className="">
                         <p className="font-medium">Trending</p>
@@ -87,7 +136,29 @@ const Navbar = () => {
           </div>
 
           <div className="flex gap-3 items-center">
-            <ModalConnectWallet />
+            {pathname !== '/exchange' ? (
+              <ModalConnectWallet balance={balance} />
+            ) : (
+              status === 'authenticated' ? (
+                <TooltipProvider>
+                  <Tooltip delayDuration={50}>
+                    <TooltipTrigger>
+                      <div className="p-2 bg-foreground rounded-md flex items-center gap-1">
+                        <img src={userData.image} alt={userData.fullname} className="w-5 h-5 rounded-full"/>
+                        <p className="text-background text-xs font-semibold">{userData.fullname}</p>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent className="mt-3">
+                      <div className="space-y-5">
+                        
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              ) : (
+                <ModalLoginReg />
+              )
+            )}
 
             <div className="lg:hidden block">
               <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>

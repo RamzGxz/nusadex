@@ -18,13 +18,17 @@ import {
 } from "@/components/ui/tooltip"
 import wallet from '@/lib/sdk/wallet';
 
+interface props {
+  btnSize?: "lg" | "default" | "sm" | "icon" | null | undefined,
+  balance?: number
+}
 
-const ModalConnectWallet = () => {
+const ModalConnectWallet = ({ btnSize = 'sm', balance }: props) => {
   const [modalOpen, setModalOpen] = useState(false);
   const { connect, connecting, select, wallets, connected, publicKey, disconnect } = useWallet();
   const [selectedWallet, setSelectedWallet] = useState<Wallet>({} as Wallet)
   const [dropdownOpen, setDropdownOpen] = useState(false)
-  const [balance, setBalance] = useState(0)
+  
 
   useEffect(() => {
     if (connected) {
@@ -42,21 +46,7 @@ const ModalConnectWallet = () => {
     }
   }
 
-  const getSolBalance = async () => {
-    if (connected && publicKey) {
-      try {
-        const balance = await wallet.getBalance(publicKey.toBase58().toString())
-        setBalance(Number(balance))
-        console.log(balance)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-  }
-
-  useEffect(() => {
-    getSolBalance()
-  }, [connected])
+  
 
   return (
     <>
@@ -64,11 +54,11 @@ const ModalConnectWallet = () => {
         <TooltipProvider delayDuration={50}>
           <Tooltip open={dropdownOpen} onOpenChange={setDropdownOpen}>
             <TooltipTrigger className='w-fit p-1 bg-foreground rounded-md text-xs text-background font-normal flex items-center gap-2'>
-              <img src={selectedWallet.adapter.icon} alt="sol-logo" className='w5 h-5 object-cover' />
+              {/* <img src={selectedWallet.adapter.icon} alt="sol-logo" className='w5 h-5 object-cover' /> */}
               {publicKey?.toBase58().slice(0, 5) + '...' + publicKey?.toBase58().slice(-5)}
             </TooltipTrigger>
             <TooltipContent className='w-full space-y-3'>
-              <h1 className='font-semibold border-b text-center pb-1'>{balance.toFixed(5)} SOL</h1>
+              <h1 className='font-semibold border-b text-center pb-1'>{balance && balance.toFixed(5)} SOL</h1>
               <div className='flex items-center flex-col gap-2  px-1'>
                 <button onClick={disconnect} className='px-2 hover:bg-background hover:text-foreground py-2 rounded-md transition-colors'>Disconnect</button>
                 {/* <button>Disconnect</button> */}
@@ -79,7 +69,7 @@ const ModalConnectWallet = () => {
       ) : (
         <Dialog open={modalOpen} onOpenChange={(isOpen) => setModalOpen(isOpen)}>
           <DialogTrigger asChild>
-            <Button size="sm">Connect Wallet</Button>
+            <Button size={btnSize}>Connect Wallet</Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
