@@ -2,10 +2,14 @@ import React from "react";
 
 import {
   ChartNoAxesCombined,
+  CircleAlert,
   Copy,
   Filter,
   Flame,
+  Ghost,
+  Globe,
   Search,
+  ShieldCheck,
   Sprout,
   Star,
   Trash,
@@ -31,20 +35,34 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
+
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import "@/styles/noscrollbar.css"
 
 
 const CoinsDetails = () => {
   return (
     <div className="flex gap-2 items-center">
-      <div className="">
+      <div className="flex-shrink-0">
         <img src="https://cdn-icons-png.flaticon.com/512/5968/5968260.png" alt="" className="h-10 w-10 rounded-full"/>
       </div>
       <div className="flex flex-col">
         <div className="font-bold">Coin Name</div>
         <div className="text-sm text-slate-600 flex gap-1 box-content items-center">
           Coin Address
-          <span className="box-content">
+          <span className="">
             <Copy className="h-4 w-4 "/>
           </span>
         </div>
@@ -72,33 +90,106 @@ const Txns = () => {
   );
 };
 
+const NetworkBedge = () => {
+  return(
+    <div className="flex items-center gap-2 flex-shrink-0">
+      <div className="">
+        <img className="w-6 h-6" src="https://cdn-icons-png.flaticon.com/512/5968/5968260.png" alt="" />
+      </div>
+      <div className="">
+        Network Name
+      </div>
+  </div>
+  );
+};
+
 
 
 const Tokens = () => {
   return (
     <>
     {/* tokens search */}
-      <div className="flex w-full justify-between">
-        <div className="flex gap-4 text-xl">
-          <a href="">Tokens</a>
-          <a href="">Watchlist</a>
+      <div className="flex w-full justify-between mt-10">
+        <div className="flex gap-6 text-xl">
+          <a href="" className="hover:border-b-2 hover:border-white text-white">Tokens</a>
+          <a href="" className="text-slate-400 hover:border-b-2 hover:border-white hover:text-white">Watchlist</a>
         </div>
 
-        <div className="flex border-2 border-white rounded-full items-center">
-          <span className="mx-1">
-            <Search />
-          </span>
-          <input
-            className="bg-transparent text-sm w-60 focus:outline-none"
-            type="search"
-            name=""
-            id=""
-            placeholder="Search token name or address"
-          />
-        </div>
+        <Sheet>
+          <SheetTrigger>
+            <div className="flex w-fit sm:w-80 py-1 sm:border-[0.5px] border-opacity-10 border-white rounded-full items-center sm:hover:outline sm:hover:outline-1 hover:outline-white">
+              <span className="ml-[8px] mr-1">
+                <Search className="w-5"/>
+              </span>
+              <input
+                className="hidden sm:block bg-transparent text-sm sm:w-full  focus:outline-none"
+                type="search"
+                name=""
+                id=""
+                placeholder="Search token name or address"
+              />
+            </div>
+          </SheetTrigger>
+          <SheetContent side="bottom" className="h-4/5">
+            <div className="flex w-1/2 mb-5 py-1 border-[0.5px] border-opacity-10 border-white rounded-full items-center hover:outline hover:outline-1 hover:outline-white">
+              <span className="ml-[8px] mr-1">
+                <Search className="w-5"/>
+              </span>
+              <input
+                className="bg-transparent text-sm w-60 focus:outline-none "
+                type="search"
+                name=""
+                id=""
+                placeholder="Search token name or address"
+              />
+            </div>
+            <div className="mb-2">
+              Top Search
+            </div>
+            <Table className="overflow-auto no-scrollbar">
+              <TableHeader>
+                <TableHead className="w-10">
+                  #
+                </TableHead>
+                <TableHead className="min-w-52">
+                  Name
+                </TableHead>
+                <TableHead className="w-1/5 min-w-24">
+                  Price
+                </TableHead>
+                <TableHead className="w-1/5 min-w-32">
+                  24h Change
+                </TableHead>
+                <TableHead className="w-1/5 min-w-24">
+                  Watchlist
+                </TableHead>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell>
+                    1
+                  </TableCell>
+                  <TableCell>
+                    <CoinsDetails/>
+                  </TableCell>
+                  <TableCell>
+                    111k
+                  </TableCell>
+                  <TableCell>
+                    -4.5%
+                  </TableCell>
+                  <TableCell>
+                    <Star className="w-4"/>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </SheetContent>
+        </Sheet>
       </div>
+
     {/* shorting bar */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between overflow-auto no-scrollbar">
         <div className="flex items-center text-sm">
           <div className="flex">
             <Button variant={'ghost'}>1m</Button>
@@ -106,7 +197,9 @@ const Tokens = () => {
             <Button variant={'ghost'}>4h</Button>
             <Button variant={'ghost'}>24</Button>
           </div>
-
+          <div className="text-slate-500">
+            |
+          </div>
           <div className="flex gap-1 items-center">
             <div className="flex px-4 py-2 gap-1">
               <Button variant="ghost">
@@ -122,53 +215,40 @@ const Tokens = () => {
                 <div>Newest</div>
               </Button>
             </div>
+          <div className="text-slate-500">
+            |
+          </div>
 
           <div className="flex">
             <Select>
               <SelectTrigger className="w-auto border-none">
-                <SelectValue placeholder="Liquidity ≥ $5K" />
+                <SelectValue placeholder="Liquidity" />
               </SelectTrigger>
               <SelectContent>
                 <div className="flex flex-col p-2">
                   <div className="text-xs text-gray-600 mb-2">
-                    Liquidity $10k
+                    Liquidity
                   </div>
                   <div className="grid grid-cols-2 gap-2 w-56 text-sm mb-3">
-                    <Button className="border-white" variant={"outline"}>
-                      $10k
+                    <Button variant={"outline"}>
+                      ≥ $10k
                     </Button>
-                    <Button className="border-white" variant={"outline"}>
-                      $50k
+                    <Button variant={"outline"}>
+                      ≥ $50k
                     </Button>
-                    <Button className="border-white" variant={"outline"}>
-                      $100k
+                    <Button variant={"outline"}>
+                      ≥ $100k
                     </Button>
-                    <Button className="border-white" variant={"outline"}>
-                      $500k
+                    <Button variant={"outline"}>
+                      ≥ $500k
                     </Button>
-                    <div>
-                      <input
-                        className="focus:outline-none w-full py-1 px-2 rounded-sm"
-                        type="text"
-                        name=""
-                        id=""
-                        placeholder="Min"
-                      />
-                    </div>
-                    <div>
-                      <input
-                        className="focus:outline-none w-full py-1 px-2 rounded-sm"
-                        type="text"
-                        name=""
-                        id=""
-                        placeholder="Max"
-                      />
-                    </div>
+                    <Input type="text" placeholder="Min"/>
+                    <Input type="text" placeholder="Max"/>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="box-content p-2 border-[1px] rounded-full flex justify-center items-center">
-                      <Trash className="w-auto h-auto" />
-                    </div>
+                    <Button variant={"outline"} size={"icon"} className="rounded-full flex-shrink-0">
+                      <Trash className="w-5 h-5"/>
+                    </Button>
                     <Button className="w-full rounded-full" variant={"outline"}>Aplly</Button>
                   </div>
                 </div>
@@ -176,49 +256,33 @@ const Tokens = () => {
             </Select>
             <Select>
               <SelectTrigger className="w-auto border-none">
-                <SelectValue placeholder="Turnover ≥ $10K" />
+                <SelectValue placeholder="Turnover" />
               </SelectTrigger>
               <SelectContent>
                 <div className="flex flex-col p-2">
                   <div className="text-xs text-gray-600 mb-2">
-                    Liquidity $10k
+                    Turnover
                   </div>
                   <div className="grid grid-cols-2 gap-2 w-56 text-sm mb-3">
-                    <Button className="border-white" variant={"outline"}>
-                      $10k
+                    <Button variant={"outline"}>
+                      ≥ $10k
                     </Button>
-                    <Button className="border-white" variant={"outline"}>
-                      $50k
+                    <Button variant={"outline"}>
+                      ≥ $50k
                     </Button>
-                    <Button className="border-white" variant={"outline"}>
-                      $100k
+                    <Button variant={"outline"}>
+                        ≥ $100k
                     </Button>
-                    <Button className="border-white" variant={"outline"}>
-                      $500k
+                    <Button variant={"outline"}>
+                        ≥ $500k
                     </Button>
-                    <div>
-                      <input
-                        className="focus:outline-none w-full py-1 px-2 rounded-sm"
-                        type="text"
-                        name=""
-                        id=""
-                        placeholder="Min"
-                      />
-                    </div>
-                    <div>
-                      <input
-                        className="focus:outline-none w-full py-1 px-2 rounded-sm"
-                        type="text"
-                        name=""
-                        id=""
-                        placeholder="Max"
-                      />
-                    </div>
+                    <Input type="text" placeholder="Min"/>
+                    <Input type="text" placeholder="Max"/>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="box-content p-2 border-[1px] rounded-full flex justify-center items-center">
-                      <Trash className="w-auto h-auto" />
-                    </div>
+                    <Button variant={"outline"} size={"icon"} className="rounded-full flex-shrink-0">
+                      <Trash className="w-5 h-5"/>
+                    </Button>
                     <Button className="w-full rounded-full" variant={"outline"}>Aplly</Button>
                   </div>
                 </div>
@@ -231,44 +295,28 @@ const Tokens = () => {
               <SelectContent>
                 <div className="flex flex-col p-2">
                   <div className="text-xs text-gray-600 mb-2">
-                    Liquidity $10k
+                    Market cap
                   </div>
                   <div className="grid grid-cols-2 gap-2 w-56 text-sm mb-3">
-                    <Button className="border-white" variant={"outline"}>
-                      $10k
+                    <Button variant={"outline"}>
+                      ≥ $10k
                     </Button>
-                    <Button className="border-white" variant={"outline"}>
-                      $50k
+                    <Button variant={"outline"}>
+                      ≥ $50k
                     </Button>
-                    <Button className="border-white" variant={"outline"}>
-                      $100k
+                    <Button variant={"outline"}>
+                      ≥ $100k
                     </Button>
-                    <Button className="border-white" variant={"outline"}>
-                      $500k
+                    <Button variant={"outline"}>
+                      ≥ $500k
                     </Button>
-                    <div>
-                      <input
-                        className="focus:outline-none w-full py-1 px-2 rounded-sm"
-                        type="text"
-                        name=""
-                        id=""
-                        placeholder="Min"
-                      />
-                    </div>
-                    <div>
-                      <input
-                        className="focus:outline-none w-full py-1 px-2 rounded-sm"
-                        type="text"
-                        name=""
-                        id=""
-                        placeholder="Max"
-                      />
-                    </div>
+                    <Input type="text" placeholder="Min"/>
+                    <Input type="text" placeholder="Max"/>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="box-content p-2 border-[1px] rounded-full flex justify-center items-center">
-                      <Trash className="w-auto h-auto" />
-                    </div>
+                    <Button variant={"outline"} size={"icon"} className="rounded-full flex-shrink-0">
+                      <Trash className="w-5 h-5"/>
+                    </Button>
                     <Button className="w-full rounded-full" variant={"outline"}>Aplly</Button>
                   </div>
                 </div>
@@ -276,41 +324,226 @@ const Tokens = () => {
             </Select>
           </div>
           </div>
-
         </div>
         
-        <div className="flex gap-1 items-end">
-          <Button variant={'ghost'}>
-          <span className="box-content">
-            <Filter className="w-5 h-5"/>
-          </span>
-          <div>Filter</div>
-          </Button>
-        </div>
+        <div>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant={'ghost'}>
+                <span className="box-content">
+                  <Filter className="w-5 h-5"/>
+                </span>
+                <div>Filter</div>
+              </Button>
+            </SheetTrigger>
+            <SheetContent className="!w-[500px] !max-w-full overflow-auto" >
+              <SheetHeader>
+                <SheetTitle className="mb-6 text-xl">
+                  Custom filters
+                </SheetTitle>
+              </SheetHeader>
+              <div className="flex flex-col gap-3 mb-3">
+                <div className="flex justify-between items-center">
+                  <div>
+                    Period
+                  </div>
+                    <div className="flex">
+                      <Button variant={'ghost'}>1m</Button>
+                      <Button variant={'ghost'}>1h</Button>
+                      <Button variant={'ghost'}>4h</Button>
+                      <Button variant={'ghost'}>24</Button>
+                    </div>
+                </div>
 
+                <div className="flex justify-between items-center">
+                  <div>
+                    Charge (%)
+                  </div>
+                  <div className="flex gap-2 w-2/3">
+                    <Input type="text" placeholder="Min"/>
+                    <Input type="text" placeholder="Max"/>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <div>
+                    Transactions
+                  </div>
+                  <div className="flex gap-2 w-2/3">
+                    <Input type="text" placeholder="Min"/>
+                    <Input type="text" placeholder="Max"/>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <div>
+                    Unique traders
+                  </div>
+                  <div className="flex gap-2 w-2/3">
+                    <Input type="text" placeholder="Min"/>
+                    <Input type="text" placeholder="Max"/>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <div>
+                    Trading volume
+                  </div>
+                  <div className="flex gap-2 w-2/3">
+                    <Input type="text" placeholder="Min"/>
+                    <Input type="text" placeholder="Max"/>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <div>
+                    Holders
+                  </div>
+                  <div className="flex gap-2 w-2/3">
+                    <Input type="text" placeholder="Min"/>
+                    <Input type="text" placeholder="Max"/>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <div>
+                    Turnover ($)
+                  </div>
+                  <div className="flex gap-2 w-2/3">
+                    <Input type="text" placeholder="Min"/>
+                    <Input type="text" placeholder="Max"/>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <div>
+                    Market cap ($)
+                  </div>
+                  <div className="flex gap-2 w-2/3">
+                    <Input type="text" placeholder="Min"/>
+                    <Input type="text" placeholder="Max"/>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <div>
+                    FDV ($)
+                  </div>
+                  <div className="flex gap-2 w-2/3">
+                    <Input type="text" placeholder="Min"/>
+                    <Input type="text" placeholder="Max"/>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <div>
+                    Liquidity ($)
+                  </div>
+                  <div className="flex gap-2 w-2/3">
+                    <Input type="text" placeholder="Min"/>
+                    <Input type="text" placeholder="Max"/>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <div>
+                    Token age
+                  </div>
+                  <div className="flex gap-2 w-2/3">
+                    <Input type="text" placeholder="Min"/>
+                    <Input type="text" placeholder="Max"/>
+                    <Select>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Periode"/>
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem value="m">
+                            Minutes
+                          </SelectItem>
+                          <SelectItem value="h">
+                            Hours
+                          </SelectItem>
+                          <SelectItem value="W">
+                            Day
+                          </SelectItem>
+                          <SelectItem value="M">
+                            Month
+                          </SelectItem>
+                          <SelectItem value="Y">
+                            Year
+                          </SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="flex justify-between">
+                  <label htmlFor="riskTokens" className="flex gap-2 items-center">
+                    Hide risky tokens 
+                    <span> 
+                      <CircleAlert className="w-4 h-4"/> 
+                    </span>
+                  </label>
+                  <Switch id="riskTokens"/>
+                </div>
+
+                <div className="flex justify-between">
+                  <label htmlFor="riskTokens" className="flex gap-2 items-center">
+                    Hide stablecoins
+                    <span> 
+                      <CircleAlert className="w-4 h-4"/> 
+                    </span>
+                  </label>
+                  <Switch id="riskTokens"/>
+                </div>
+              </div>
+
+              <SheetFooter>
+                <div className="w-full flex items-center gap-2">
+                  <Button variant={"outline"} size={"icon"} className="rounded-full flex-shrink-0">
+                    <Trash className="w-5 h-5"/>
+                  </Button>
+                  <div className="flex-grow grid grid-cols-2 gap-2">
+                    <Button variant={"outline"} className="rounded-full">
+                      Riset
+                    </Button>
+                    <Button variant={"outline"} className="rounded-full">
+                      Filter
+                    </Button>
+                  </div>
+                </div>
+              </SheetFooter>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
+
     {/* table */}
       <div>
-        <Table>
+        <Table className="overflow-auto no-scrollbar">
           <TableHeader>
-            <TableHead><span className="mr-4">#</span>Name</TableHead>
-            <TableHead>Price</TableHead>
-            <TableHead>Change %</TableHead>
-            <TableHead>Txns</TableHead>
-            <TableHead>Unique traders</TableHead>
-            <TableHead>Holders</TableHead>
-            <TableHead>Turnover</TableHead>
-            <TableHead>Market cap</TableHead>
-            <TableHead>Liquidity</TableHead>
-            <TableHead>Liquidity</TableHead>
-            <TableHead>Token Age</TableHead>
-            <TableHead>Auidit</TableHead>
+            <TableRow>             
+              <TableHead className="min-w-52"><span className="mr-4">#</span>Name</TableHead>
+              <TableHead className="whitespace-nowrap">Price</TableHead>
+              <TableHead className="whitespace-nowrap">Change (%)</TableHead>
+              <TableHead className="whitespace-nowrap">Txns</TableHead>
+              <TableHead className="whitespace-nowrap">Unique traders</TableHead>
+              <TableHead className="whitespace-nowrap">Holders</TableHead>
+              <TableHead className="whitespace-nowrap">Turnover</TableHead>
+              <TableHead className="whitespace-nowrap">Market cap</TableHead>
+              <TableHead className="whitespace-nowrap">Liquidity</TableHead>
+              <TableHead className="whitespace-nowrap">Liquidity</TableHead>
+              <TableHead className="whitespace-nowrap">Token Age</TableHead>
+              <TableHead className="whitespace-nowrap">Auidit</TableHead>
+            </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow>
               <TableCell>
                 <div className="flex gap-5 items-center">
-                  <Star/>
+                  <Star className="flex-shrink-0 w-4"/>
                   <CoinsDetails/>
                 </div>
               </TableCell>
@@ -345,11 +578,35 @@ const Tokens = () => {
                 4M
               </TableCell>
               <TableCell>
-                Audit??
+                <ShieldCheck className="text-green-600"/>
               </TableCell>
             </TableRow>
           </TableBody>
         </Table>
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious href="#" />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#">1</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#" isActive>
+                2
+              </PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#">3</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationEllipsis />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationNext href="#" />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       </div>
     </>
   );
