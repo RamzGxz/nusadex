@@ -7,6 +7,7 @@ import {
   Filter,
   Flame,
   Ghost,
+  Globe,
   Search,
   ShieldCheck,
   Sprout,
@@ -34,15 +35,26 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
+
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import "@/styles/noscrollbar.css"
 
 
 const CoinsDetails = () => {
   return (
-    <div className="flex gap-2 items-center min-w-52">
+    <div className="flex gap-2 items-center">
       <div className="flex-shrink-0">
         <img src="https://cdn-icons-png.flaticon.com/512/5968/5968260.png" alt="" className="h-10 w-10 rounded-full"/>
       </div>
@@ -78,33 +90,106 @@ const Txns = () => {
   );
 };
 
+const NetworkBedge = () => {
+  return(
+    <div className="flex items-center gap-2 flex-shrink-0">
+      <div className="">
+        <img className="w-6 h-6" src="https://cdn-icons-png.flaticon.com/512/5968/5968260.png" alt="" />
+      </div>
+      <div className="">
+        Network Name
+      </div>
+  </div>
+  );
+};
+
 
 
 const Tokens = () => {
   return (
     <>
     {/* tokens search */}
-      <div className="flex w-full justify-between">
-        <div className="flex gap-4 text-xl">
-          <a href="">Tokens</a>
-          <a href="">Watchlist</a>
+      <div className="flex w-full justify-between mt-10">
+        <div className="flex gap-6 text-xl">
+          <a href="" className="hover:border-b-2 hover:border-white text-white">Tokens</a>
+          <a href="" className="text-slate-400 hover:border-b-2 hover:border-white hover:text-white">Watchlist</a>
         </div>
 
-        <div className="flex border-2 border-white rounded-full items-center">
-          <span className="mx-1">
-            <Search />
-          </span>
-          <input
-            className="bg-transparent text-sm w-60 focus:outline-none"
-            type="search"
-            name=""
-            id=""
-            placeholder="Search token name or address"
-          />
-        </div>
+        <Sheet>
+          <SheetTrigger>
+            <div className="flex w-fit sm:w-80 py-1 sm:border-[0.5px] border-opacity-10 border-white rounded-full items-center sm:hover:outline sm:hover:outline-1 hover:outline-white">
+              <span className="ml-[8px] mr-1">
+                <Search className="w-5"/>
+              </span>
+              <input
+                className="hidden sm:block bg-transparent text-sm sm:w-full  focus:outline-none"
+                type="search"
+                name=""
+                id=""
+                placeholder="Search token name or address"
+              />
+            </div>
+          </SheetTrigger>
+          <SheetContent side="bottom" className="h-4/5">
+            <div className="flex w-1/2 mb-5 py-1 border-[0.5px] border-opacity-10 border-white rounded-full items-center hover:outline hover:outline-1 hover:outline-white">
+              <span className="ml-[8px] mr-1">
+                <Search className="w-5"/>
+              </span>
+              <input
+                className="bg-transparent text-sm w-60 focus:outline-none "
+                type="search"
+                name=""
+                id=""
+                placeholder="Search token name or address"
+              />
+            </div>
+            <div className="mb-2">
+              Top Search
+            </div>
+            <Table className="overflow-auto no-scrollbar">
+              <TableHeader>
+                <TableHead className="w-10">
+                  #
+                </TableHead>
+                <TableHead className="min-w-52">
+                  Name
+                </TableHead>
+                <TableHead className="w-1/5 min-w-24">
+                  Price
+                </TableHead>
+                <TableHead className="w-1/5 min-w-32">
+                  24h Change
+                </TableHead>
+                <TableHead className="w-1/5 min-w-24">
+                  Watchlist
+                </TableHead>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell>
+                    1
+                  </TableCell>
+                  <TableCell>
+                    <CoinsDetails/>
+                  </TableCell>
+                  <TableCell>
+                    111k
+                  </TableCell>
+                  <TableCell>
+                    -4.5%
+                  </TableCell>
+                  <TableCell>
+                    <Star className="w-4"/>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </SheetContent>
+        </Sheet>
       </div>
+
     {/* shorting bar */}
-      <div className="flex items-center justify-between overflow-auto">
+      <div className="flex items-center justify-between overflow-auto no-scrollbar">
         <div className="flex items-center text-sm">
           <div className="flex">
             <Button variant={'ghost'}>1m</Button>
@@ -437,10 +522,10 @@ const Tokens = () => {
 
     {/* table */}
       <div>
-        <Table className="overflow-auto">
+        <Table className="overflow-auto no-scrollbar">
           <TableHeader>
             <TableRow>             
-              <TableHead className="whitespace-nowrap"><span className="mr-4">#</span>Name</TableHead>
+              <TableHead className="min-w-52"><span className="mr-4">#</span>Name</TableHead>
               <TableHead className="whitespace-nowrap">Price</TableHead>
               <TableHead className="whitespace-nowrap">Change (%)</TableHead>
               <TableHead className="whitespace-nowrap">Txns</TableHead>
@@ -456,48 +541,72 @@ const Tokens = () => {
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell className="whitespace-nowrap">
+              <TableCell>
                 <div className="flex gap-5 items-center">
                   <Star className="flex-shrink-0 w-4"/>
                   <CoinsDetails/>
                 </div>
               </TableCell>
-              <TableCell className="whitespace-nowrap">
+              <TableCell>
                 $123.25K
               </TableCell>
-              <TableCell className="whitespace-nowrap">
+              <TableCell>
                 -18.93%
               </TableCell>
-              <TableCell className="whitespace-nowrap">
+              <TableCell>
                 <Txns/>
               </TableCell>
-              <TableCell className="whitespace-nowrap">
+              <TableCell>
                 32.02K
               </TableCell>
-              <TableCell className="whitespace-nowrap">
+              <TableCell>
                 90.88K
               </TableCell>
-              <TableCell className="whitespace-nowrap">
+              <TableCell>
                 150.88M
               </TableCell>
-              <TableCell className="whitespace-nowrap">
+              <TableCell>
                 400.88M
               </TableCell>
-              <TableCell className="whitespace-nowrap">
+              <TableCell>
                 650.88M
               </TableCell>
-              <TableCell className="whitespace-nowrap">
+              <TableCell>
                 4M
               </TableCell>
-              <TableCell className="whitespace-nowrap">
+              <TableCell>
                 4M
               </TableCell>
-              <TableCell className="whitespace-nowrap">
+              <TableCell>
                 <ShieldCheck className="text-green-600"/>
               </TableCell>
             </TableRow>
           </TableBody>
         </Table>
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious href="#" />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#">1</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#" isActive>
+                2
+              </PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#">3</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationEllipsis />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationNext href="#" />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       </div>
     </>
   );
