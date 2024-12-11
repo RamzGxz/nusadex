@@ -150,21 +150,19 @@ export default function index() {
             </div>
           </div>
           <div className="flex flex-col">
-            <span className="text-xl font-bold overflow-hidden text-right text-ellipsis">
+            <span className="text-2xl font-bold overflow-hidden text-right text-ellipsis">
               $0.124
             </span>
-            <div className="text-sm text-right">
-              <div className="text-[#ca3f64]">+25.15%</div>
+            <div className="text-base text-right">
+              <div className="text-[#f23645]">+25.15%</div>
             </div>
           </div>
         </div>
-        <div className="ml-0 pl-80">
-          <Settings />
-        </div>
       </div>
+
       <div className="flex flex-row h-[calc(100vh - 118px)] mt-[2px] min-[500px] border-t-2 border-b-2 border-[#6c6c6c]">
         <div className="flex flex-1 gap-[2px]">
-          <div className="flex flex-col gap-1 w-[280px] order-1  border-r-2 border-[#6c6c6c]">
+          <div className="flex flex-col gap-1 w-[295px] order-1 border-r-2 border-[#6c6c6c]">
             <div className="flex-1 pt-4">
               <div className="min-h-[120px] overflow-hidden">
                 <Tabs defaultValue="trending" className="w-[280px] px-2">
@@ -240,7 +238,7 @@ export default function index() {
                                 $0.124
                               </span>
                               <div className="text-sm text-right">
-                                <div className="text-[#ca3f64]">+25.15%</div>
+                                <div className="text-[#f23645]">+25.15%</div>
                               </div>
                             </div>
                             <div className="text-right"></div>
@@ -290,8 +288,8 @@ export default function index() {
             </div>
           </div>
           {/* Mid */}
-          <div className="flex flex-col w-[790px] order-2">
-            <div className="flex flex-1 m-2 pt-4 border border-white justify-center items-center">
+          <div className="flex flex-col w-[686px] order-2">
+            <div className="flex flex-1 mt-4 mx-2 border border-white justify-center items-center">
               Chart
             </div>
             <div className="min-h-[120px] overflow-hidden p-2">
@@ -355,7 +353,20 @@ export default function index() {
             </div>
           </div>
           {/* Right */}
-          <div className="order-3 border border-white">Hai</div>
+          <div className="flex flex-col w-[295px] order-3 border-l-2 border-[#6c6c6c]">
+            <div className="flex flex-1 flex-col gap-1">
+              <div className="p-4">
+                <div className="mb-4">
+                  <div className="flex justify-between">
+                    <div className="text-base font-bold">Overview</div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </>

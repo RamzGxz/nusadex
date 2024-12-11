@@ -79,7 +79,7 @@ export default function HolderTabs() {
                   </span>
                   <Progress
                     value={holder.holdingPercentage}
-                    className="h-1 w-24 bg-neutral-800"
+                    className="h-1 w-24 bg-neutral-800 "
                   />
                 </div>
               </TableCell>
