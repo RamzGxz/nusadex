@@ -107,10 +107,8 @@ const authOptions: NextAuthOptions = {
               email: user.email || '',
               fullname: user.name || '',
               id:  generateUserId(),
-              phone: user.phone || '',
               image: user.image || '',
               emailVerified: true,
-              phoneVerified: false,
               walletAddress: []
             },
           })
@@ -133,10 +131,8 @@ const authOptions: NextAuthOptions = {
               email: user.email || '',
               fullname: user.name || '',
               id:  generateUserId(),
-              phone: user.phone || '',
               image: user.image || '',
               emailVerified: true,
-              phoneVerified: false,
               walletAddress: []
             },
           })
