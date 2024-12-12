@@ -48,7 +48,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import "@/styles/noscrollbar.css"
+
 
 
 const CoinsDetails = () => {

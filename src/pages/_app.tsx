@@ -4,13 +4,13 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
-import { UnsafeBurnerWalletAdapter, PhantomWalletAdapter, SolflareWalletAdapter, BitgetWalletAdapter, AlphaWalletAdapter, AvanaWalletAdapter, BitpieWalletAdapter, CloverWalletAdapter, Coin98WalletAdapter, CoinhubWalletAdapter, TrustWalletAdapter } from '@solana/wallet-adapter-wallets';
+import { PhantomWalletAdapter, SolflareWalletAdapter, BitgetWalletAdapter, AlphaWalletAdapter, AvanaWalletAdapter, BitpieWalletAdapter, CloverWalletAdapter, Coin98WalletAdapter, CoinhubWalletAdapter, TrustWalletAdapter } from '@solana/wallet-adapter-wallets';
 import { clusterApiUrl } from '@solana/web3.js';
-import { useEffect, useMemo } from "react";
-import { ErrorBoundary } from "next/dist/client/components/error-boundary";
-import { toast, ToastContainer } from 'react-toastify'
+import { useMemo } from "react";
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { SessionProvider } from 'next-auth/react'
+import { SessionProvider } from 'next-auth/react';
+import "@/styles/noscrollbar.css"
 
 export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   const network = WalletAdapterNetwork.Mainnet;
