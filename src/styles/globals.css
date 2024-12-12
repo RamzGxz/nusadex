@@ -64,3 +64,31 @@
     @apply bg-background text-foreground;
   }
 }
+
+::-webkit-scrollbar {
+  background-color: transparent;
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: hsl(215.4 16.3% 46.9%);
+  border-radius: 99px;
+  border: 2px solid transparent;
+  box-sizing: border-box;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+nextjs-portal {
+  display: none;
+}
