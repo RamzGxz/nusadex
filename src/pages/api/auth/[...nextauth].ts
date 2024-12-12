@@ -4,12 +4,13 @@ import prisma from '@/lib/prisma';
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
+import GitHubProvider from "next-auth/providers/github"
 
 const key = String(process.env.NEXT_PRIVATE_HASH_KEY)
 
 
 const authOptions: NextAuthOptions = {
-  secret: process.env.NEXT_PRIVATE_SECRET_KEY,
+  secret: process.env.NEXT_PRIVATE_HASH_KEY,
   session: {
     strategy: 'jwt',
     maxAge: 5 * 60 * 60,
@@ -77,10 +78,14 @@ const authOptions: NextAuthOptions = {
           response_type: "code",
         },
       },
+    }),
+
+    GitHubProvider({
+      clientId: process.env. NEXT_PRIVATE_GITHUB_CLIENT_ID || '',
+      clientSecret: process.env. NEXT_PRIVATE_GITHUB_CLIENT_SECRET || ''
     })
-
-
   ],
+
   callbacks: {
     async jwt({ token, account, user }: any) {
       if (account?.provider === 'user' && user) {
@@ -91,7 +96,6 @@ const authOptions: NextAuthOptions = {
         const existingUser = await prisma.users.findFirst({ where: { email: user.email } })
         if (existingUser) {
           token.id = existingUser.id
-          token.loginType = 'google'
           await prisma.users.update({
             where: { id: existingUser.id }, data: {
               emailVerified: true,
@@ -101,11 +105,36 @@ const authOptions: NextAuthOptions = {
           const newUser = await prisma.users.create({
             data: {
               email: user.email || '',
-              fullname: user.fullname || '',
+              fullname: user.name || '',
               id:  generateUserId(),
               phone: user.phone || '',
               image: user.image || '',
-              password: await hash.encrypt(key, user.password),
+              emailVerified: true,
+              phoneVerified: false,
+              walletAddress: []
+            },
+          })
+          token.id = newUser.id
+        }
+      }
+
+      if(account?.provider === 'github') {
+        const existingUser = await prisma.users.findFirst({ where: { email: user.email } })
+        if (existingUser) {
+          token.id = existingUser.id
+          await prisma.users.update({
+            where: { id: existingUser.id }, data: {
+              emailVerified: true,
+            }
+          })
+        } else {
+          const newUser = await prisma.users.create({
+            data: {
+              email: user.email || '',
+              fullname: user.name || '',
+              id:  generateUserId(),
+              phone: user.phone || '',
+              image: user.image || '',
               emailVerified: true,
               phoneVerified: false,
               walletAddress: []
@@ -127,6 +156,11 @@ const authOptions: NextAuthOptions = {
       return session
     },
   },
+  pages: {
+    error: '/exchange'
+  }
 }
+
+
 
 export default NextAuth(authOptions)

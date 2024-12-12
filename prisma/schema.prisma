@@ -16,12 +16,17 @@ datasource db {
 model Users {
   id            String   @id @map("_id")
   createdAt     DateTime @default(now())
-  fullname      String   
+  fullname      String
   email         String   @unique
   password      String   @default("")
-  phone         String   @unique
+  // phone         String   @unique
   emailVerified Boolean  @default(false)
-  phoneVerified Boolean  @default(false)
-  walletAddress String[]   @default([])
+  // phoneVerified Boolean  @default(false)
+  walletAddress String[] @default([])
   image         String   @default("https://img.freepik.com/free-psd/3d-render-avatar-character_23-2150611765.jpg")
+}
+
+model Otp {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  code String
 }

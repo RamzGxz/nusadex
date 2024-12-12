@@ -9,12 +9,15 @@ import wallet from '@/lib/sdk/wallet';
 import { toast } from 'react-toastify';
 
 interface props {
-  hasPriceDetails?: boolean
+  hasPriceDetails?: boolean,
+  mintA: string,
+  setMintA: Dispatch<SetStateAction<string>>,
+  mintB: string,
+  setMintB: Dispatch<SetStateAction<string>>
 }
 
-const SwapComponents = ({ hasPriceDetails = true }: props) => {
-  const [mintA, setMintA] = useState('So11111111111111111111111111111111111111112')
-  const [mintB, setMintB] = useState('GzY1KbkgbxaLCY52aQZ2JDk1ygE5V4wF7c9UdDVuvPma')
+const SwapComponents = ({ hasPriceDetails = true, mintA, setMintA, setMintB, mintB }: props) => {
+  
   const [tokenChange, setTokenChange] = useState(false)
   const { connected, publicKey } = useWallet()
   const [tokenAccountData, setTokenAccountData] = useState<{ address: string; balance: number; }[]>([])
@@ -64,11 +67,11 @@ const SwapComponents = ({ hasPriceDetails = true }: props) => {
   return (
     <div className='w-full flex flex-col gap-5 items-center'>
 
-      <SwapInput mint={tokenChange ? mintB : mintA} setMint={tokenChange ? setMintB : setMintA} title='From' balance={balanceA} />
+      <SwapInput mintA={mintA} disabled={tokenChange ? false: true} mint={tokenChange ? mintB : mintA} setMint={tokenChange ? setMintB : setMintA} title='From' balance={balanceA} />
 
       <Button size={'icon'} onClick={() => setTokenChange(!tokenChange)}><ArrowUpDown /></Button>
 
-      <SwapInput mint={tokenChange ? mintA : mintB} setMint={tokenChange ? setMintA : setMintB} title='To' balance={balanceB} />
+      <SwapInput mintA={mintA} disabled={tokenChange ? true: false} mint={tokenChange ? mintA : mintB} setMint={tokenChange ? setMintA : setMintB} title='To' balance={balanceB} />
 
       <div className={`w-full ${hasPriceDetails ? 'bg-muted/30 p-3' : ''}  rounded-md flex flex-col gap-5`}>
         {hasPriceDetails && (

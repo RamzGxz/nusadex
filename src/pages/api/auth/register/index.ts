@@ -4,24 +4,32 @@ import { NextApiRequest, NextApiResponse } from "next"
 import hash from "@/lib/database/hash"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { email, phone, password, fullname } = req.body
+  const { email, password, fullname, emailVerified = false } = req.body
   const key = String(process.env.NEXT_PRIVATE_HASH_KEY)
 
   if (req.method === 'POST') {
     const hashedPassword = await hash.encrypt(key, password)
+    
     try {
-      await prisma.users.create({
-        data: {
-          fullname,
-          id: generateUserId(),
-          email,
-          phone,
-          password: hashedPassword
-        }
-      })
-      res.status(200).json({
-        msg: 'Reg success!'
-      })
+      const findedData = await prisma.users.findUnique({ where: { email } })
+      if (findedData) {
+        res.status(303).json({
+          msg: 'Email Found!'
+        })
+      } else {
+        await prisma.users.create({
+          data: {
+            fullname,
+            id: generateUserId(),
+            email,
+            password: hashedPassword,
+            emailVerified,
+          }
+        })
+        res.status(200).json({
+          msg: 'Reg success!'
+        })
+      }
     } catch (error) {
       res.status(500).json({
         msg: 'Internal server error!',

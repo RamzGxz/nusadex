@@ -20,7 +20,7 @@ import HolderTabs from "@/components/details/holder-tabs";
 // import { useEffect, useState } from "react";
 
 export default function index() {
-  const textToCopy = "GzY1Kbkg...dDVuvPma"; // Teks yang akan disalin
+  const textToCopy = "GzY1Kbkg...dDVuvPma"
 
   const handleCopy = () => {
     // Salin teks ke clipboard

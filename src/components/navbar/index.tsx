@@ -7,7 +7,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { ArrowLeftRight, ChevronDown, MenuIcon, NewspaperIcon } from "lucide-react";
+import { ArrowLeftRight, ChevronDown, LayoutDashboardIcon, LogOut, MenuIcon, NewspaperIcon, Wallet2Icon } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -24,10 +24,20 @@ import ModalConnectWallet from "../modals/connectWallet";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import ModalLoginReg from "../modals/loginReg";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { UserDataType } from "@/types/userDataTypes";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { Button } from "../ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 
 
 const Navbar = () => {
@@ -62,7 +72,6 @@ const Navbar = () => {
       try {
         const resp = await axios(`/api/users/get/${session?.user.id}`)
         setuserData(resp.data)
-        console.log(resp.data)
       } catch (error) {
         toast.error('Error while fetching user data!')
         console.log(error)
@@ -139,18 +148,31 @@ const Navbar = () => {
             {pathname !== '/exchange' ? (
               <ModalConnectWallet balance={balance} />
             ) : (
-              status === 'authenticated' ? (
+              status === 'authenticated' && userData ? (
                 <TooltipProvider>
                   <Tooltip delayDuration={50}>
                     <TooltipTrigger>
                       <div className="p-2 bg-foreground rounded-md flex items-center gap-1">
-                        <img src={userData.image} alt={userData.fullname} className="w-5 h-5 rounded-full"/>
+                        <img src={userData.image} alt={userData.fullname} className="w-5 h-5 rounded-full" />
                         <p className="text-background text-xs font-semibold">{userData.fullname}</p>
                       </div>
                     </TooltipTrigger>
-                    <TooltipContent className="mt-3">
-                      <div className="space-y-5">
-                        
+                    <TooltipContent className="mt-3 p-3">
+                      <div className="space-y-1">
+                        <p className="pb-1 border-b font-semibold text-center">{userData.email}</p>
+                        <Link href={'#'} className="w-full hover:bg-muted-foreground/30 p-2 flex items-center gap-1 rounded-md transition-colors">
+                          <LayoutDashboardIcon size={16} strokeWidth={2} />
+                          <p className="font-medium">Dashboard</p>
+                        </Link>
+                        <Link href={'#'} className="w-full hover:bg-muted-foreground/30 p-2 flex items-center gap-1 rounded-md transition-colors">
+                          <Wallet2Icon size={16} strokeWidth={2} />
+                          <p className="font-medium">Wallet Management</p>
+                        </Link>
+                        <button onClick={async () => await signOut()} className="w-full text-red-500 hover:bg-muted-foreground/30 p-2 flex items-center gap-1 rounded-md transition-colors">
+                          <LogOut size={16} strokeWidth={2} />
+                          Logout
+                        </button>
+
                       </div>
                     </TooltipContent>
                   </Tooltip>

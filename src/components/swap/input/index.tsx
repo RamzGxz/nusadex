@@ -13,11 +13,13 @@ interface props {
   mint: string,
   setMint: Dispatch<SetStateAction<string>>
   title: string,
-  balance: number
+  balance: number,
+  disabled?: boolean,
+  mintA: string
 }
 
 
-const SwapInput = ({ mint, setMint, title, balance }: props) => {
+const SwapInput = ({ mint, setMint, title, balance, disabled=false, mintA }: props) => {
   const [tokenData, setTokenData] = useState<ApiV3Token>({} as ApiV3Token)
   const getTokenInfo = async () => {
     try {
@@ -49,7 +51,7 @@ const SwapInput = ({ mint, setMint, title, balance }: props) => {
         </div>
       </div>
       <div className='flex items-center justify-between w-full bg-muted/40 p-2 rounded-md'>
-        <ModalSelectToken setMint={setMint} tokenData={tokenData} mint={mint} />
+        <ModalSelectToken mintA={mintA} disabled={disabled} setMint={setMint} tokenData={tokenData} mint={mint} />
         <Input className='text-right border-0 focus-visible:ring-0 font-semibold lg:text-2xl w-fit h-fit appearance-none' defaultValue={0} type='number' />
       </div>
     </div>
