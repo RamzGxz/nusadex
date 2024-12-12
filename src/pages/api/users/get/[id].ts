@@ -13,9 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         fullname: true,
         image: true,
         password: false,
-        phone: true,
         walletAddress: true,
-        phoneVerified: true
       }
     })
     res.send(data)
