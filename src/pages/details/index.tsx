@@ -1,10 +1,8 @@
 import {
-  Circle,
   CirclePlus,
   Copy,
   Earth,
   Mouse,
-  Settings,
   Star,
   Upload,
   User,
@@ -41,7 +39,7 @@ export default function index() {
             <div className="flex relative ">
               <div className="flex-wrap ">
                 <img
-                  src="https://pavocoin.xyz/wp-content/uploads/2024/07/Logo-1-100x100.png"
+                  src="https://res.cloudinary.com/dnuusu1kb/image/upload/v1734177677/pavo-logo.png"
                   alt=""
                   width={50}
                   height={50}
@@ -209,7 +207,7 @@ export default function index() {
                               <div className="flex relative">
                                 <div className="flex-wrap">
                                   <img
-                                    src="https://pavocoin.xyz/wp-content/uploads/2024/07/Logo-1-100x100.png"
+                                    src="https://res.cloudinary.com/dnuusu1kb/image/upload/v1734177677/pavo-logo.png"
                                     alt=""
                                     width={32}
                                     height={32}
@@ -263,7 +261,9 @@ export default function index() {
                         </div>
                       </div>
                       <div className="flex justify-center mt-5">
-                        <Button className="mx-auto">Connect wallet</Button>
+                        <Button className="mx-auto" variant={"nusadex"}>
+                          Connect wallet
+                        </Button>
                       </div>
                     </div>
                   </TabsContent>
@@ -342,7 +342,9 @@ export default function index() {
                       </div>
                     </div>
                     <div className="flex justify-center mt-5">
-                      <Button className="mx-auto">Connect wallet</Button>
+                      <Button className="mx-auto" variant={"nusadex"}>
+                        Connect wallet
+                      </Button>
                     </div>
                   </div>
                 </TabsContent>
@@ -361,9 +363,7 @@ export default function index() {
                     <div className="text-base font-bold">Overview</div>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  
-                </div>
+                <div className="grid grid-cols-2 gap-4"></div>
               </div>
             </div>
           </div>
