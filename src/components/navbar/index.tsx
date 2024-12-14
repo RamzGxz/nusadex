@@ -86,7 +86,7 @@ const Navbar = () => {
   }, [status])
 
   return (
-    <div className="xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm xl:px-0 lg:px-3 px-6 mx-auto">
+    <div className="w-full px-8">
       <div className="flex items-center justify-between">
         <Link href={'/'}>
           <img src="/logo-nusadex-text.svg" alt="" className="w-[150px]" />

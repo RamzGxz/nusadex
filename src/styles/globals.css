@@ -67,7 +67,7 @@
 
 ::-webkit-scrollbar {
   background-color: transparent;
-  width: 8px;
+  width: 5px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -91,4 +91,13 @@ input[type=number] {
 
 nextjs-portal {
   display: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }

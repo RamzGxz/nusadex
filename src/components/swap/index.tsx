@@ -51,7 +51,7 @@ const SwapComponents = ({ hasPriceDetails = true, mintA, setMintA, setMintB, min
 
   useEffect(() => {
     if (connected && publicKey) {
-      getTokenBalance()
+      // getTokenBalance()
     }
   }, [connected, publicKey])
 

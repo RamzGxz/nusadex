@@ -1,59 +1,13 @@
-import {
-  Circle,
-  CirclePlus,
-  Copy,
-  Earth,
-  Mouse,
-  Settings,
-  Star,
-  Upload,
-  User,
-} from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import React from "react";
-import { TokenSearch } from "@/components/ui/search-input";
-import { Votes } from "@/components/details/votes";
-import { Button } from "@/components/ui/button";
-import HistoryTabs from "@/components/details/history-tabs";
-import LiquidityChangeTabs from "@/components/details/liq-change-tabs";
-import HolderTabs from "@/components/details/holder-tabs";
-// import { useEffect, useState } from "react";
-
-export default function index() {
-  const textToCopy = "GzY1Kbkg...dDVuvPma"
-
-  const handleCopy = () => {
-    // Salin teks ke clipboard
-    navigator.clipboard
-      .writeText(textToCopy)
-      .then(() => {
-        alert("Teks berhasil disalin!");
-      })
-      .catch((error) => {
-        console.error("Gagal menyalin teks: ", error);
-      });
-  };
-  return (
-    <>
-      <div className="w-full flex items-center justify-between py-2 ">
-        <div className="flex flex-1 items-center justify-between ">
+<div className="w-full flex items-center justify-between py-6 ">
+        
+        <div className=" flex flex-1 items-center justify-between">
           <div className="flex items-center pr-4 ">
             <div className="flex relative ">
               <div className="flex-wrap ">
-                <img
-                  src="https://pavocoin.xyz/wp-content/uploads/2024/07/Logo-1-100x100.png"
-                  alt=""
-                  width={50}
-                  height={50}
-                />
+                <img src="https://img-v1.raydium.io/icon/GzY1KbkgbxaLCY52aQZ2JDk1ygE5V4wF7c9UdDVuvPma.png" alt="" width={50} height={50} />
               </div>
               <div className="flex absolute -bottom-1 -right-1 ">
-                <img
-                  src="https://logos-world.net/wp-content/uploads/2024/01/Solana-Logo.png"
-                  alt=""
-                  width={30}
-                  height={30}
-                />
+                <img src="https://logos-world.net/wp-content/uploads/2024/01/Solana-Logo.png" alt="" width={30} height={30} />
               </div>
             </div>
             <div className="flex flex-col shrink ml-5 ">
@@ -69,12 +23,9 @@ export default function index() {
               <div className="flex flex-wrap items-center gap-1">
                 <div className="flex items-center text-sm">
                   <span className="text-[#909090]">{textToCopy}</span>
-                  <Copy
-                    width={16}
-                    height={16}
-                    className="ml-1 text-[#909090] cursor-pointer"
-                    onClick={handleCopy}
-                  />
+                  <Button variant={'ghost'} className="p-1 h-fit w-fit" onClick={handleCopy}>
+                    <Copy className=" text-[#909090] cursor-pointer" />
+                  </Button>
                 </div>
                 <div className="bg-[#2e2e2e] h-3 w-[1px] mx-1"></div>
                 <div className="flex flex-wrap text-xs font-medium gap-2">
@@ -149,22 +100,25 @@ export default function index() {
               </div>
             </div>
           </div>
-          <div className="flex flex-col">
-            <span className="text-xl font-bold overflow-hidden text-right text-ellipsis">
-              $0.124
-            </span>
-            <div className="text-sm text-right">
-              <div className="text-[#ca3f64]">+25.15%</div>
+          <div className="flex items-center gap-2">
+            <div className="flex flex-col">
+              <span className="text-sm font-bold overflow-hidden text-right text-ellipsis">
+                $0.124
+              </span>
+              <div className="text-sm text-right">
+                <div className="text-[#ca3f64]">+25.15%</div>
+              </div>
+            </div>
+            <div className="">
+              <Settings size={24} />
             </div>
           </div>
         </div>
-        <div className="ml-0 pl-80">
-          <Settings />
-        </div>
+
       </div>
-      <div className="flex flex-row h-[calc(100vh - 118px)] mt-[2px] min-[500px] border-t-2 border-b-2 border-[#6c6c6c]">
+      <div className="flex flex-row h-[calc(100vh - 118px)] mt-[2px] min-[500px] border-t-2 border-b">
         <div className="flex flex-1 gap-[2px]">
-          <div className="flex flex-col gap-1 w-[280px] order-1  border-r-2 border-[#6c6c6c]">
+          <div className="flex flex-col gap-1 w-[280px] order-1  border-r">
             <div className="flex-1 pt-4">
               <div className="min-h-[120px] overflow-hidden">
                 <Tabs defaultValue="trending" className="w-[280px] px-2">
@@ -289,11 +243,8 @@ export default function index() {
               </div>
             </div>
           </div>
-          {/* Mid */}
+          
           <div className="flex flex-col w-[790px] order-2">
-            <div className="flex flex-1 m-2 pt-4 border border-white justify-center items-center">
-              Chart
-            </div>
             <div className="min-h-[120px] overflow-hidden p-2">
               <Tabs defaultValue="history" className="w-full">
                 <TabsList>
@@ -354,10 +305,7 @@ export default function index() {
               </Tabs>
             </div>
           </div>
-          {/* Right */}
+          
           <div className="order-3 border border-white">Hai</div>
         </div>
       </div>
-    </>
-  );
-}

@@ -11,18 +11,21 @@ const AppShell = ({ children }: { children: ReactElement }) => {
     <>
       <Head>
         <title>Nusadex - Fast & Smart Exchange</title>
+        <link rel="icon" href="/logo-nusadex-text.png" />
       </Head>
       {!path.includes(pathname) ? (
         <div>
           <div className='w-full py-3 sticky top-0 backdrop-blur-3xl z-50'>
             <Navbar />
           </div>
-          <div className='xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm xl:px-0 lg:px-3 px-6 mx-auto'>
+          <div className='w-full px-8'>
             {children}
           </div>
-          <div className='py-3'>
-            <Footer />
-          </div>
+          {pathname !== '/tokens/details/[id]' && (
+            <div className='py-3'>
+              <Footer />
+            </div>
+          )}
         </div>
       ) : children}
     </>

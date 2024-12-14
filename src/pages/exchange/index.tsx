@@ -10,12 +10,14 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useRouter } from "next/router";
 
 export default function index() {
   const [activeTab, setActiveTab] = useState("exchange");
+  const {pathname} = useRouter()
 
   return (
-    <div className="w-full">
+    <div className={`${pathname === '/exchange' && 'max-w-screen-xl mx-auto'}`}>
       <div className="lg:flex lg:justify-around lg:py-20 md:flex md:justify-around md:py-20">
         <div className="flex flex-col gap-6 pt-16">
           <h1 className="font-bold lg:text-5xl lg:leading-snug lg:text-start md:text-4xl md:leading-snug md:text-start text-3xl text-center ">
@@ -198,7 +200,7 @@ export default function index() {
           </div>
         </div>
       </div>
-      <div className="py-20">
+      <div className="py-20 w-full">
         <div className="lg:flex">
           <div className="flex flex-col lg:gap-8 md:gap-8 gap-4 lg:text-start md:text-center text-center">
             <h2 className="font-bold lg:text-5xl md:text-3xl text-2xl">

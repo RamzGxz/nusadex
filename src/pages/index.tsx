@@ -31,7 +31,7 @@ export default function Home() {
     try {
       const data = await token.list(50);
       if (data) {
-        setTokenList(data.slice(0, 4));
+        setTokenList(data.filter(item=> item.name !== '').slice(0,4));
       }
     } catch (error) { }
   };
@@ -41,10 +41,9 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="w-full space-y-32">
+    <div className="w-full space-y-32 max-w-screen-xl xl:px-0 mx-auto">
       {/* Section CTA */}
-
-      <div className={`w-full flex items-center lg:flex-row flex-col lg:gap-0 gap-16 justify-between lg:h-[85vh] py-8`}>
+      <div className={`lg:w-3/4 w-full mx-auto flex items-center lg:flex-row flex-col lg:gap-0 gap-16 justify-between lg:h-[85vh] py-8`}>
         <div className="space-y-8 text-left lg:w-1/2 w-full">
           <h1 className="text-5xl font-semibold leading-snug">
             Start and Build Your Crypto Portfolio Here
@@ -57,13 +56,12 @@ export default function Home() {
             Get Started
           </Button>
         </div>
-        <div className="lg:w-1/2 w-full h-full flex justify-center items-center">
-          <video className="first-img lg:w-[43%]" style={{ visibility: 'visible' }} autoPlay loop muted playsInline poster="https://www.okx.com/cdn/assets/imgs/243/F485DEA432C68FD9.png?x-oss-process=image/format,webp"><source src="https://www.okx.com/cdn/assets/files/243/79620084DA93114F.webm" type="video/webm" /><source src="https://www.okx.com/cdn/assets/files/243/78FBA21FD210816A.mp4" type="video/mp4" /><track kind="captions" /></video>
+        <div className="lg:w-1/2 w-full h-full flex justify-end items-center">
+          <video className="first-img lg:w-[55%]" style={{ visibility: 'visible' }} autoPlay loop muted playsInline poster="https://www.okx.com/cdn/assets/imgs/243/F485DEA432C68FD9.png?x-oss-process=image/format,webp"><source src="https://www.okx.com/cdn/assets/files/243/79620084DA93114F.webm" type="video/webm" /><source src="https://www.okx.com/cdn/assets/files/243/78FBA21FD210816A.mp4" type="video/mp4" /><track kind="captions" /></video>
         </div>
       </div>
 
       {/* Section TRENDING */}
-
       <div className="w-full items-start flex flex-col gap-3">
         <h2 className="font-medium">Token Trends</h2>
         <div className="w-full grid lg:grid-cols-4 gap-6 md:grid-cols-3 sm:grid-cols-2">
