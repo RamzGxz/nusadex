@@ -1,3 +1,5 @@
+'use client'
+
 import React from "react";
 import { useState } from "react";
 import Image from "next/image";
@@ -12,61 +14,37 @@ import {
 } from "@/components/ui/accordion";
 import { useRouter } from "next/router";
 
-export default function index() {
+const ExhangePags = () => {
   const [activeTab, setActiveTab] = useState("exchange");
-  const {pathname} = useRouter()
+  const { pathname } = useRouter()
 
   return (
-    <div className={`${pathname === '/exchange' && 'max-w-screen-xl mx-auto'}`}>
-      <div className="lg:flex lg:justify-around lg:py-20 md:flex md:justify-around md:py-20">
-        <div className="flex flex-col gap-6 pt-16">
-          <h1 className="font-bold lg:text-5xl lg:leading-snug lg:text-start md:text-4xl md:leading-snug md:text-start text-3xl text-center ">
-            Trade with solana
-            <br />
-            cryptocurrency and
-            <br />
-            derivatives on
-            <br /> NusaDex
-          </h1>
-          <p className="opacity-70 lg:text-lg text-base lg:text-start md:text-start text-center ">
-            Secure and reliable platform for crypto trading.
-          </p>
+    <div className={`${pathname === '/exchange' && 'max-w-screen-xl mx-auto'} lg:pt-5 pt-8 space-y-16`}>
+      <div className="flex justify-between lg:flex-row flex-col lg:gap-0 gap-5 items-center w-full lg:max-w-screen-lg mx-auto">
+        <div className="flex flex-col gap-10 lg:w-1/2 w-full lg:items-start items-center">
+          <div className="lg:space-y-1 space-y-3">
+            <h1 className="font-bold lg:text-5xl lg:leading-tight lg:text-start md:text-4xl md:leading-snug md:text-start text-7xl text-center ">
+              List your solana tokens and derivatives on NusaDex.
+            </h1>
+            <p className="text-muted-foreground lg:text-lg text-xl lg:text-start text-center">
+              Secure and reliable platform for crypto trading.
+            </p>
+          </div>
           <div className="items-start">
-            <Link href="/swap">
-              <Button
-                className="border rounded-full bg-foreground/100 text-black p-7 text-lg font-medium w-full lg:w-36 md:w-36"
-                variant={"nusadex"}
-              >
-                Trade Now
+            <Link href="/exchange/token-listing">
+              <Button variant={"default"} size={'lg'}>
+                List Now!
               </Button>
             </Link>
           </div>
-          <div className="flex lg:justify-between md:justify-between justify-around lg:pt-12">
-            <img
-              src="https://res.cloudinary.com/doqmudewb/image/upload/v1733190788/Project/llkl6llrplkyvqkmfpb8.png"
-              alt="Pavo Logo"
-              className="lg:w-[100px] lg:h-[100px] w-[65px] h-[65px]"
-            />
-            <div className="py-4">
-              <img
-                src="https://res.cloudinary.com/doqmudewb/image/upload/v1733190782/Project/ti0ywmjnxvjtdjgcjau0.png"
-                alt="DBI Logo"
-                className="lg:w-[100px] h-auto] w-[65px]"
-              />
-            </div>
-            <img
-              src="https://res.cloudinary.com/doqmudewb/image/upload/v1733190787/Project/gyqt0uki2q9riusoe0gf.png"
-              alt="Mudapedia Logo"
-              className="lg:w-[100px] lg:h-[100px] w-[65px] h-[65px]"
-            />
+          <div className="flex items-center gap-5">
+            <img src="https://res.cloudinary.com/doqmudewb/image/upload/v1733190788/Project/llkl6llrplkyvqkmfpb8.png" alt="Pavo Logo" className="w-24 h-24 object-cover" />
+            <img src="https://res.cloudinary.com/doqmudewb/image/upload/v1733190782/Project/ti0ywmjnxvjtdjgcjau0.png" alt="DBI Logo" className="w-24 h-24 object-contain" />
+            <img src="https://res.cloudinary.com/doqmudewb/image/upload/v1733190787/Project/gyqt0uki2q9riusoe0gf.png" alt="Mudapedia Logo" className="w-24 h-24 object-fill" />
           </div>
         </div>
-        <div>
-          <img
-            className="w-[420px] h-auto"
-            src="/iPhone 14 Plus.png"
-            alt="Mockup"
-          />
+        <div className="w-1/2 hidden justify-end lg:flex">
+          <img className="w-[420px] h-auto" src="/iPhone 14 Plus.png" alt="Mockup" />
         </div>
       </div>
       <div className="items-center flex flex-col lg:py-20">
@@ -319,3 +297,5 @@ export default function index() {
     </div>
   );
 }
+
+export default ExhangePags

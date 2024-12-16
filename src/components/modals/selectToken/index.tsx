@@ -29,7 +29,6 @@ const ModalSelectToken = ({ setMint, tokenData, mint, disabled = false, mintA }:
   const [searchValue, setSearchValue] = useState('')
 
   const getDefaultMintList = async () => {
-    console.log('ping')
     try {
       const data = await token.list()
       if (data) {

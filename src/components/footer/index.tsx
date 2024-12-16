@@ -18,7 +18,7 @@ const Footer = () => {
     <div className={`${pathname === '/' || pathname === '/exchange' ? 'max-w-screen-xl mx-auto w-full' : 'w-full px-8'} py-16`}>
       <div className="space-y-8">
         {/* Logo */}
-        <div className="flex flex-col gap-2 w-full">
+        <div className="flex flex-col gap-2 w-full lg:px-0 px-8">
           <img src="/logo-nusadex-text.svg" alt="" className="w-[150px]" />
           <p className="opacity-70">©2017 - 2024 NUSADEX.COM</p>
         </div>
@@ -409,12 +409,12 @@ const Footer = () => {
           </div>
 
           {/* Footer Mobile */}
-          <div className="lg:hidden block">
+          <div className="lg:hidden block w-full px-8">
             <FooterMobile />
           </div>
 
           {/* Content Media Social */}
-          <div className="w-full flex gap-5 items-center">
+          <div className="w-full flex gap-5 items-center lg:px-0 px-8">
             <h1 className="font-bold">Community</h1>
             <div className="flex gap-3">
               <Link

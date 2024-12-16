@@ -44,6 +44,8 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import ModalConnectWallet from "@/components/modals/connectWallet";
 import { ApiV3Token } from "@raydium-io/raydium-sdk-v2";
 import token from "@/lib/sdk/tokens";
+import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "react-toastify";
 
 
 
@@ -72,7 +74,7 @@ const TableSort = ({ label }: TableSortProps) => {
 
 const TokensTable = ({ data }: { data: ApiV3Token[] }) => {
   return (
-    <div className="max-h-[75vh] overflow-auto">
+    <div className="max-h-[70vh] overflow-auto">
       <Table className="">
         <TableHeader className="sticky top-0 bg-background">
           <TableRow>
@@ -91,11 +93,8 @@ const TokensTable = ({ data }: { data: ApiV3Token[] }) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data && data.length > 0 && data.filter(item => item.name !== '').map((item, index) => (
-            <TableRow key={index} className="cursor-pointer" onClick={() => window.open(`/tokens/details/${item.address}`)}>
-              {/* <TableCell className="lg:table-cell hidden">
-                <Star className="flex-shrink-0 w-4" />
-              </TableCell> */}
+          {data && data.length > 0 ? data.filter(item => item.name !== '').map((item, index) => (
+            <TableRow key={index} className="cursor-pointer" onClick={() => location.href = `/tokens/details/${item.address}`}>
               <TableCell>
                 <div className="flex gap-5 items-center">
                   <div className="flex gap-3 items-center">
@@ -131,7 +130,41 @@ const TokensTable = ({ data }: { data: ApiV3Token[] }) => {
                 </div>
               </TableCell>
             </TableRow>
-          ))}
+          )) : (
+            Array.from({ length: 6 }, (_v, i) => (
+              <TableRow className="cursor-pointer" key={i}>
+                <TableCell>
+                  <div className="flex gap-5 items-center">
+                    <div className="flex gap-3 items-center">
+                      <div className="flex-shrink-0">
+                        <Skeleton className="w-8 h-8 rounded-full" />
+                      </div>
+                      <div className="space-y-1">
+                        <Skeleton className="w-24 h-2" />
+                        <Skeleton className="w-16 h-2" />
+                      </div>
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell className="text-end"><Skeleton className="w-10 h-2" /></TableCell>
+                <TableCell className="text-end"><Skeleton className="w-10 h-2" /></TableCell>
+                <TableCell className="lg:table-cell hidden text-end">
+                  <div className="space-y-1.5">
+                    <Skeleton className="w-10 h-2" />
+                  </div>
+                </TableCell>
+                <TableCell className="lg:table-cell hidden text-center"><Skeleton className="w-10 h-2" /></TableCell>
+                <TableCell className="lg:table-cell hidden text-center"><Skeleton className="w-10 h-2" /></TableCell>
+                <TableCell className="lg:table-cell hidden text-center"><Skeleton className="w-10 h-2" /></TableCell>
+                <TableCell className="lg:table-cell hidden text-center"><Skeleton className="w-10 h-2" /></TableCell>
+                <TableCell className="lg:table-cell hidden text-center"><Skeleton className="w-10 h-2" /></TableCell>
+                <TableCell className="lg:table-cell hidden text-center"><Skeleton className="w-10 h-2" /></TableCell>
+                <TableCell className="lg:table-cell hidden text-end">
+                  <Skeleton className="w-10 h-2" />
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
 
       </Table>
@@ -139,8 +172,39 @@ const TokensTable = ({ data }: { data: ApiV3Token[] }) => {
   )
 }
 
-const SearchTokens = () => {
+const SearchTokens = ({ data }: { data: ApiV3Token[] }) => {
   const [sheetOpen, setSheetOpen] = useState(false)
+  let [tokensDefault, setTokensDefault] = useState<ApiV3Token[]>(data.slice(0, 4))
+  const [searchValue, setSearchValue] = useState('')
+
+  const searchToken = async () => {
+    try {
+      const data = await token.getTokenInfo(searchValue)
+      if (data) {
+        setTokensDefault(data)
+        console.log(data)
+      } else {
+        toast.error('Cannot get token token info!')
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    if (searchValue !== '' && searchValue.length === 44) {
+      searchToken()
+    } else {
+      setTokensDefault(data.slice(0, 4))
+    }
+  }, [searchValue])
+
+  useEffect(() => {
+    if (!sheetOpen) {
+      setTokensDefault(data.slice(0, 4))
+      setSearchValue('')
+    }
+  }, [sheetOpen])
 
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
@@ -148,62 +212,85 @@ const SearchTokens = () => {
         <span className="">
           <Search className="w-5" />
         </span>
-        <p className="lg:block md:block hidden">Search token name or address</p>
+        <p className="lg:block md:block hidden">Search token address</p>
       </Button>
-      <SheetContent side="bottom" className="h-1/2">
+      <SheetContent side="bottom" className="h-[50vh]">
         <div className="flex w-full mb-5 py-1 border-b-[0.5px] border-opacity-10 border-white items-center">
-          <span className="ml-[8px] mr-1">
-            <Search className="w-5" />
+          <span className="ml-[8px] mr-3">
+            <Search className="w-4" />
           </span>
           <input
-            className="bg-transparent text-sm w-60 focus:outline-none "
+            className="bg-transparent text-sm w-full focus:outline-none "
             type="search"
             name=""
             id=""
-            placeholder="Search token name or address"
+            placeholder="Search token address"
+            onChange={(e) => setSearchValue(e.target.value)}
           />
         </div>
         <div className="mb-2">
           Top Search
         </div>
-        <Table className="overflow-auto no-scrollbar">
-          <TableHeader>
-            <TableHead className="w-10">
-              #
-            </TableHead>
-            <TableHead className="min-w-52">
-              Name
-            </TableHead>
-            <TableHead className="w-1/5 min-w-24">
-              Price
-            </TableHead>
-            <TableHead className="w-1/5 min-w-32">
-              24h Change
-            </TableHead>
-            <TableHead className="w-1/5 min-w-24">
-              Watchlist
-            </TableHead>
-          </TableHeader>
-          <TableBody>
-            <TableRow>
-              <TableCell>
-                1
-              </TableCell>
-              <TableCell>
-                {/* <CoinsDetails /> */}
-              </TableCell>
-              <TableCell>
-                111k
-              </TableCell>
-              <TableCell>
-                -4.5%
-              </TableCell>
-              <TableCell>
-                <Star className="w-4" />
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+        <div className="max-h-[35vh] overflow-auto">
+          <Table className="overflow-auto no-scrollbar">
+            <TableHeader className="sticky top-0 bg-background">
+              <TableRow>
+                {/* <TableHead className="lg:table-cell hidden"></TableHead> */}
+                <TableHead className="font-light">Name</TableHead>
+                <TableHead className="text-end"><TableSort label="Price" /></TableHead>
+                <TableHead className="text-end"><TableSort label="Change (%)" /></TableHead>
+                <TableHead className="lg:table-cell hidden text-end"><TableSort label="Txns" /></TableHead>
+                <TableHead className="lg:table-cell hidden text-end"><TableSort label="Unique traders" /></TableHead>
+                <TableHead className="lg:table-cell hidden text-end"><TableSort label="Holders" /></TableHead>
+                <TableHead className="lg:table-cell hidden text-end"><TableSort label="Turnover" /></TableHead>
+                <TableHead className="lg:table-cell hidden text-end"><TableSort label="Market cap" /></TableHead>
+                <TableHead className="lg:table-cell hidden text-end"><TableSort label="Liquidity" /></TableHead>
+                <TableHead className="lg:table-cell hidden text-end"><TableSort label="Token Age" /></TableHead>
+                <TableHead className="font-light lg:table-cell hidden text-end">Auidit</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {tokensDefault.filter(item => item.name !== '').map((item, index) => (
+                <TableRow key={index} className="cursor-pointer" onClick={() => window.open(`/tokens/details/${item.address}`)}>
+                  <TableCell>
+                    <div className="flex gap-5 items-center">
+                      <div className="flex gap-3 items-center">
+                        <div className="flex-shrink-0">
+                          <img src={item.logoURI} alt={item.name} className="h-8 w-8 rounded-full" />
+                        </div>
+                        <div className=" space-y-0">
+                          <div className="font-bold">{item.name}</div>
+                          <div className="text-sm text-slate-600 flex gap-1 box-content items-center">
+                            {item.address.slice(0, 5) + '...' + item.address.slice(-5)}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-end">$123.25K</TableCell>
+                  <TableCell className="text-end">-18.93%</TableCell>
+                  <TableCell className="lg:table-cell hidden text-end">
+                    <div className="space-y-1.5">
+                      <p>155.49K</p>
+                      <p className="text-xs"><span className="text-xs text-green-500">77.10K</span> / <span className="text-red-500">4.66K</span></p>
+                    </div>
+                  </TableCell>
+                  <TableCell className="lg:table-cell hidden text-center">32.02K</TableCell>
+                  <TableCell className="lg:table-cell hidden text-center">90.88K</TableCell>
+                  <TableCell className="lg:table-cell hidden text-center">150.88M</TableCell>
+                  <TableCell className="lg:table-cell hidden text-center">400.88M</TableCell>
+                  <TableCell className="lg:table-cell hidden text-center">650.88M</TableCell>
+                  <TableCell className="lg:table-cell hidden text-center">4M</TableCell>
+                  <TableCell className="lg:table-cell hidden text-end">
+                    <div className="w-full flex justify-end">
+                      <ShieldCheck className="text-green-600" />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </SheetContent>
     </Sheet>
   )
@@ -649,7 +736,7 @@ const Tokens = () => {
             <TabsTrigger value="tokens" className=" pb-2 data-[state=active]:border-b-2 data-[state=active]:border-foreground px-0 font-semibold rounded-none text-xl">Tokens</TabsTrigger>
             <TabsTrigger value="watchlist" className=" pb-2 data-[state=active]:border-b-2 data-[state=active]:border-foreground px-0 font-semibold rounded-none text-xl">Watchlist</TabsTrigger>
           </div>
-          <SearchTokens />
+          <SearchTokens data={tokensData} />
         </TabsList>
         <TabsContent value="tokens">
           <div className="space-y-3">

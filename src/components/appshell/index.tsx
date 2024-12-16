@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 const AppShell = ({ children }: { children: ReactElement }) => {
   const { pathname } = useRouter()
   const path = ['/404']
+  const footerPath = ['/tokens/details/[id]', '/tokens']
   return (
     <>
       <Head>
@@ -21,7 +22,7 @@ const AppShell = ({ children }: { children: ReactElement }) => {
           <div className='w-full px-8'>
             {children}
           </div>
-          {pathname !== '/tokens/details/[id]' && (
+          {!footerPath.includes(pathname) && (
             <div className='py-3'>
               <Footer />
             </div>

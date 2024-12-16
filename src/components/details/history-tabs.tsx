@@ -113,7 +113,7 @@ export default function HistoryTabs() {
         <TableHeader>
           <TableRow className="hover:bg-transparent">
             <TableHead
-              className="flex w-[100px] items-center cursor-pointer select-none"
+              className="lg:flex hidden gap-1 items-center cursor-pointer select-none"
               onClick={() => {
                 handleSortClick();
                 setValueSort(null);
@@ -163,7 +163,7 @@ export default function HistoryTabs() {
             <TableHead>Amount</TableHead>
             <TableHead>Price</TableHead>
             <TableHead
-              className="flex items-center cursor-pointer select-none"
+              className="lg:flex hidden items-center cursor-pointer select-none"
               onClick={handleValueSortClick}
             >
               Value
@@ -182,14 +182,14 @@ export default function HistoryTabs() {
                 />
               </div>
             </TableHead>
-            <TableHead>Address</TableHead>
-            <TableHead className="text-right">Info</TableHead>
+            <TableHead className="lg:table-cell hidden">Address</TableHead>
+            <TableHead className="text-right lg:table-cell hidden">Info</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {filteredAndSortedTransactions.map((transaction, index) => (
             <TableRow key={index} className="hover:bg-muted/50">
-              <TableCell className="font-medium">{transaction.time}</TableCell>
+              <TableCell className="font-medium lg:table-cell hidden">{transaction.time}</TableCell>
               <TableCell>
                 <Badge
                   variant="outline"
@@ -217,8 +217,8 @@ export default function HistoryTabs() {
                 </div>
               </TableCell>
               <TableCell>${transaction.price.toFixed(5)}</TableCell>
-              <TableCell>${transaction.value.toFixed(5)}</TableCell>
-              <TableCell>
+              <TableCell className="lg:table-cell hidden">${transaction.value.toFixed(5)}</TableCell>
+              <TableCell className="lg:table-cell hidden">
                 <div className="flex items-center gap-2">
                   <span className="text-neutral-200">
                     {transaction.address}
@@ -231,8 +231,8 @@ export default function HistoryTabs() {
                     <Copy className="h-3 w-3" />
                   </Button>
                 </div>
-              </TableCell>
-              <TableCell className="text-right">
+              </TableCell >
+              <TableCell className="text-right lg:table-cell hidden">
                 <ExternalLink className="h-4 w-4 inline-block" />
               </TableCell>
             </TableRow>

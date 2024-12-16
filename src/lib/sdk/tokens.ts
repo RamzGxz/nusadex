@@ -1,7 +1,12 @@
 import raydium from '@/lib/raydium';
 import { Connection, PublicKey } from '@solana/web3.js';
+import axios from 'axios';
 
 const conn = new Connection('https://mainnet.helius-rpc.com/?api-key=5c27681d-fcca-4886-8584-51e89282bfe9', 'confirmed')
+
+interface priceType {
+  "[ mint id ]": "string"
+}
 
 const token = {
   getTokenInfo: async (mint: string) => {
@@ -43,6 +48,16 @@ const token = {
       return data
     } catch (error) {
       console.log(error)
+    }
+  },
+  getPrice: async (mint: string) => {
+    try {
+      const data = await axios(`https://api-v3.raydium.io/mint/price?mints=${mint}`)
+      if (data) {
+        return data.data.data[mint]
+      }
+    } catch (error) {
+      console.error(error)
     }
   }
 }

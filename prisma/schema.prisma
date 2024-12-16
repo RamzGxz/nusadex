@@ -30,3 +30,14 @@ model Otp {
   id   String @id @default(auto()) @map("_id") @db.ObjectId
   code String
 }
+
+model TokenListed {
+  id         String   @id @map("_id")
+  title      String
+  pitch      String
+  tokenImage String
+  website    String
+  telegram   String
+  x          String
+  discord    String
+}
