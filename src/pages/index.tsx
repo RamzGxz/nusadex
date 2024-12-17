@@ -231,7 +231,7 @@ export default function Home() {
             </TableHeader>
             <TableBody>
               {Array.from({ length: 4 }, (_v, i) => (
-                <TableRow>
+                <TableRow key={i}>
                   <TableCell className="font-medium lg:table-cell hidden">{i + 1}</TableCell>
                   <TableCell className="flex items-center gap-3">
                     <img

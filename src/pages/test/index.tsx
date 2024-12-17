@@ -4,6 +4,7 @@ import token from '@/lib/sdk/tokens';
 import { OhclvDataType } from '@/types/ohclvDataTypes';
 import { ApiV3PageIns, ApiV3Token, ApiV3TokenRes, PoolsApiReturn } from '@raydium-io/raydium-sdk-v2';
 import { T } from '@raydium-io/raydium-sdk-v2/lib/api-9d98bd04';
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 
 const TestPage = () => {
@@ -62,14 +63,24 @@ const TestPage = () => {
     }
   }
 
+  const getOKXTokenList = async () => {
+    try {
+      const resp = await axios('/api/token/list')
+      console.log(resp.data)
+      
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
 
   useEffect(() => {
     // getMarketData()
     // getTokenInfoData()
     // getPoolInfoData()
     // getTokenList()
-    getParsedTokenInfoData()
-
+    // getParsedTokenInfoData()
+    // getOKXTokenList()
   }, [])
 
   return (

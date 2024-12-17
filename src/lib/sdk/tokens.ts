@@ -1,12 +1,9 @@
 import raydium from '@/lib/raydium';
 import { Connection, PublicKey } from '@solana/web3.js';
 import axios from 'axios';
-
 const conn = new Connection('https://mainnet.helius-rpc.com/?api-key=5c27681d-fcca-4886-8584-51e89282bfe9', 'confirmed')
+const okxSecretKey = process.env.NEXT_PRIVATE_OKX_SECRET_KEY || ''
 
-interface priceType {
-  "[ mint id ]": "string"
-}
 
 const token = {
   getTokenInfo: async (mint: string) => {
@@ -60,6 +57,7 @@ const token = {
       console.error(error)
     }
   }
+  
 }
 
 export default token
