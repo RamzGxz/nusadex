@@ -727,7 +727,7 @@ const TokensPage = () => {
     const interval = setInterval(() =>{
       getTokenData()
     }, 3000)
-    return clearInterval(interval)
+    return () => clearInterval(interval)
   }, [
     changeMax,
     changeMin,
