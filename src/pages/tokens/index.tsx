@@ -1,332 +1,230 @@
-
-import {
-  ChartNoAxesCombined,
-  ChevronDown, CircleAlert,
-  Copy,
-  Edit2Icon,
-  Filter,
-  Flame,
-  Search,
-  ShieldCheck,
-  Sprout,
-  Star,
-  Trash
-} from "lucide-react";
-
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem, SelectTrigger,
-  SelectValue
-} from "@/components/ui/select";
-
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-
-import { Drawer, DrawerContent, DrawerHeader } from "@/components/ui/drawer";
-
+import ModalConnectWallet from "@/components/modals/connectWallet";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Drawer, DrawerContent, DrawerHeader } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { useWallet } from "@solana/wallet-adapter-react";
-import ModalConnectWallet from "@/components/modals/connectWallet";
-import { ApiV3Token } from "@raydium-io/raydium-sdk-v2";
-import token from "@/lib/sdk/tokens";
-import { Skeleton } from "@/components/ui/skeleton";
-import { toast } from "react-toastify";
-import axios from "axios";
-import { TokenListDataType } from "@/types/tokenListDataTypes";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import TableSkeleton from "@/components/ui/tableSkeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import formatNumber from "@/lib/formatNumber";
-import { formatDate, formatDistanceToNow } from "date-fns";
 import formatRelativeTime from "@/lib/formatRelativeDate";
+import { TokenListDataType } from "@/types/tokenListDataTypes";
+import { TokenSearchDataTypes } from "@/types/tokenSearchDataTypes";
+import { useWallet } from "@solana/wallet-adapter-react";
+import axios from "axios";
+import { ChartNoAxesCombined, ChevronDown, ChevronUp, CircleAlert, Edit2Icon, Filter, Flame, Search, ShieldCheck, Sprout, Trash } from "lucide-react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 interface TableSortProps {
-  label: string;
+  label: string,
+  sortView?: boolean,
+  rankBy?: number,
+  rank?: number,
+  desc?: boolean,
+  setRankBy?: Dispatch<SetStateAction<number>>
+  setDesc?: Dispatch<SetStateAction<boolean>>
+  setTokensData?: Dispatch<SetStateAction<TokenListDataType[]>>
 }
 
-const TableSort = ({ label }: TableSortProps) => {
+const TableSort = ({ label, sortView = true, rankBy, desc, setDesc, setRankBy, rank, setTokensData }: TableSortProps) => {
+
+  const handler = () => {
+    setDesc && setDesc(!desc)
+    setRankBy && setRankBy(Number(rank))
+    setTokensData && setTokensData([])
+  }
+
   return (
     <>
-      <Button variant={"ghost"} className="hover:bg-transparent p-0 w-fit">
-        <div className="flex items-center gap-1">
-          <div className="font-semibold">
+      <Button onClick={handler} variant={"ghost"} className="hover:bg-transparent hover:text-muted-foreground/80 p-0 w-fit [&_svg]:size-[16px]">
+        <div className="flex items-center gap-2">
+          <div className="font-medium text-xs">
             {label}
           </div>
-          <div className="flex flex-col gap-0">
-            {/* <ChevronUp size={10} className="w-1 h-2 -mb-1" /> */}
-            <ChevronDown size={10} className="w-1 h-2 font-semibold " strokeWidth={1} />
-          </div>
+          {sortView && sortView === true && (
+            <div className="-space-y-1.5">
+              <ChevronUp strokeWidth={2} className={`${rank === rankBy && !desc && 'text-foreground'}`} />
+              <ChevronDown strokeWidth={2} className={`${rank === rankBy && desc && 'text-foreground'}`} />
+            </div>
+          )}
         </div>
       </Button>
     </>
   )
 }
 
-const TokensTable = ({ data }: { data: TokenListDataType[] }) => {
+const SearchTokens = () => {
+  const [sheetOpen, setSheetOpen] = useState(false)
+  const [tokensDefault, setTokensDefault] = useState<TokenSearchDataTypes[]>([])
+  const [searchValue, setSearchValue] = useState('')
+
+
+  const getHotSearch = async () => {
+    try {
+      const resp = await axios('/api/token/search/trending')
+      setTokensDefault(resp.data)
+    } catch (error) {
+
+    }
+  }
+
+  useEffect(() => () => {
+    getHotSearch()
+
+  }, [])
+
+  useEffect(() => {
+    if (!sheetOpen) {
+      // setTokensDefault(data.slice(0, 4))
+      setSearchValue('')
+    }
+  }, [sheetOpen])
+
   return (
-    <div className="lg:max-h-full max-h-[70vh] overflow-auto">
-      <Table className="">
-        <TableHeader className="sticky top-0 bg-background">
-          <TableRow>
-            <TableHead className="font-semibold text-sm">Name</TableHead>
-            <TableHead className="text-end text-sm font-semibold"><TableSort label="Price" /></TableHead>
-            <TableHead className="text-end text-sm font-semibold"><TableSort label="Change (%)" /></TableHead>
-            <TableHead className="lg:table-cell hidden text-end text-sm font-semibold"><TableSort label="Txns" /></TableHead>
-            <TableHead className="lg:table-cell hidden text-end text-sm font-semibold"><TableSort label="Unique traders" /></TableHead>
-            <TableHead className="lg:table-cell hidden text-end text-sm font-semibold"><TableSort label="Holders" /></TableHead>
-            {/* <TableHead className="lg:table-cell hidden text-end"><TableSort label="Turnover" /></TableHead> */}
-            <TableHead className="lg:table-cell hidden text-end text-sm font-semibold"><TableSort label="Market cap" /></TableHead>
-            <TableHead className="lg:table-cell hidden text-end text-sm font-semibold"><TableSort label="Liquidity" /></TableHead>
-            <TableHead className="lg:table-cell hidden text-end text-sm font-semibold"><TableSort label="Token Age" /></TableHead>
-            <TableHead className="lg:table-cell hidden text-end text-sm font-semibold">Auidit</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data && data.length > 0 ? data.filter(item => item.tokenSymbol !== '').map((item, index) => (
-            <TableRow key={index} className="cursor-pointer border-b-0" onClick={() => location.href = `/tokens/details/${item.tokenContractAddress}`}>
-              <TableCell className="rounded-s-md">
-                <div className="flex gap-5 items-center">
-                  <div className="flex gap-3 items-center">
-                    <div className="flex-shrink-0">
-                      <img src={item.tokenLogoUrl} alt={item.tokenSymbol} className="h-8 w-8 rounded-full" />
-                    </div>
-                    <div className=" space-y-0">
-                      <div className="font-bold text-sm">{item.tokenSymbol}</div>
-                      <div className="text-xs font-medium text-muted-foreground/80 flex gap-1 box-content items-center">
-                        {item.tokenContractAddress.slice(0, 5) + '...' + item.tokenContractAddress.slice(-5)}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </TableCell>
-              <TableCell className="text-end text-sm font-medium">{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 7 }).format(Number(item.price))}</TableCell>
-              <TableCell className="text-center text-sm font-medium">
-                {Number(item.change) > 1 ? (
-                  <span className="text-green-500">{formatNumber(Number(item.change))}%</span>
-                ) : (
-                  <span className="text-red-500">{item.change}%</span>
-                )}
-              </TableCell>
-              <TableCell className="lg:table-cell hidden text-end">
-                <div className="space-y-0.5">
-                  <p className="text-sm font-medium">{formatNumber(Number(item.txs))}</p>
-                  <p className="text-xs"><span className="text-xs text-green-500">{formatNumber(Number(item.txsBuy))}</span> / <span className="text-red-500">{formatNumber(Number(item.txsSell))}</span></p>
-                </div>
-              </TableCell>
-              <TableCell className="lg:table-cell hidden text-center text-sm font-medium">{formatNumber(Number(item.uniqueTraders))}</TableCell>
-              <TableCell className="lg:table-cell hidden text-center text-sm font-medium">{formatNumber(Number(item.holders))}</TableCell>
-              {/* <TableCell className="lg:table-cell hidden text-center text-sm font-medium">{formatNumber(Number(item.))}</TableCell> */}
-              <TableCell className="lg:table-cell hidden text-center text-sm font-medium">{formatNumber(Number(item.marketCap))}</TableCell>
-              <TableCell className="lg:table-cell hidden text-center text-sm font-medium">{formatNumber(Number(item.liquidity))}</TableCell>
-              <TableCell className="lg:table-cell hidden text-center text-sm font-medium capitalize">{formatRelativeTime(new Date(Number(item.firstPriceTime)))}</TableCell>
-              <TableCell className="lg:table-cell hidden text-end rounded-e-md">
-                <div className="w-full flex justify-end">
-                  {Number(item.riskLevel) > 2 ? (
-                    <ShieldCheck className="text-yellow-500" />
-                  ) : <ShieldCheck className="text-green-500" />}
-                </div>
-              </TableCell>
-            </TableRow>
-          )) : (
-            Array.from({ length: 6 }, (_v, i) => (
-              <TableRow className="cursor-pointer" key={i}>
-                <TableCell>
-                  <div className="flex gap-5 items-center">
-                    <div className="flex gap-3 items-center">
-                      <div className="flex-shrink-0">
-                        <Skeleton className="w-8 h-8 rounded-full" />
-                      </div>
-                      <div className="space-y-1">
-                        <Skeleton className="w-24 h-2" />
-                        <Skeleton className="w-16 h-2" />
-                      </div>
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell className="text-end"><Skeleton className="w-10 h-2" /></TableCell>
-                <TableCell className="text-end"><Skeleton className="w-10 h-2" /></TableCell>
-                <TableCell className="lg:table-cell hidden text-end">
-                  <div className="space-y-1.5">
-                    <Skeleton className="w-10 h-2" />
-                  </div>
-                </TableCell>
-                <TableCell className="lg:table-cell hidden text-center"><Skeleton className="w-10 h-2" /></TableCell>
-                <TableCell className="lg:table-cell hidden text-center"><Skeleton className="w-10 h-2" /></TableCell>
-                <TableCell className="lg:table-cell hidden text-center"><Skeleton className="w-10 h-2" /></TableCell>
-                <TableCell className="lg:table-cell hidden text-center"><Skeleton className="w-10 h-2" /></TableCell>
-                <TableCell className="lg:table-cell hidden text-center"><Skeleton className="w-10 h-2" /></TableCell>
-                <TableCell className="lg:table-cell hidden text-center"><Skeleton className="w-10 h-2" /></TableCell>
-                <TableCell className="lg:table-cell hidden text-end">
-                  <Skeleton className="w-10 h-2" />
-                </TableCell>
+    <Dialog open={sheetOpen} onOpenChange={setSheetOpen}>
+      <Button variant={'outline'} className="sm:w-80 justify-start" onClick={() => setSheetOpen(true)}>
+        <span className="">
+          <Search className="w-5" />
+        </span>
+        <p className="lg:block md:block hidden">Search token name or address</p>
+      </Button>
+      <DialogContent className="max-w-screen-md">
+        <div className="flex w-full mb-5 py-1 border-b-[0.5px] border-opacity-10 border-white items-center">
+          <span className="ml-[8px] mr-3">
+            <Search className="w-4" />
+          </span>
+          <input
+            className="bg-transparent text-sm w-full focus:outline-none "
+            type="search"
+            name=""
+            id=""
+            placeholder="Search token name or address"
+            onChange={(e) => setSearchValue(e.target.value)}
+          />
+        </div>
+        <div className="mb-2 text-sm text-muted-foreground">
+          {searchValue !== '' ? (
+            'Results'
+          ) : 'Top Searches'}
+        </div>
+        <div className="max-h-[65vh] overflow-auto">
+          <Table className="overflow-auto no-scrollbar">
+            <TableHeader className="sticky top-0 bg-background">
+              <TableRow>
+                {/* <TableHead className="lg:table-cell hidden"></TableHead> */}
+                <TableHead className="font-medium text-xs">Name</TableHead>
+                <TableHead className=""><TableSort label="Price" sortView={false} /></TableHead>
+                <TableHead className=""><TableSort label="24h Change" sortView={false} /></TableHead>
+
               </TableRow>
-            ))
-          )}
-        </TableBody>
-      </Table>
-    </div>
+            </TableHeader>
+            <TableBody>
+              {tokensDefault.filter(item => item.tokenSymbol !== '' && !item.tokenContractAddress.includes('0x')).map((item, index) => (
+                <TableRow key={index} className="cursor-pointer border-b-0" onClick={() => location.href = `/tokens/details/${item.tokenContractAddress}`}>
+                  <TableCell className="rounded-s-md">
+                    <div className="flex gap-5 items-center">
+                      <div className="flex gap-3 items-center">
+                        <div className="flex-shrink-0">
+                          <img src={item.tokenLogoUrl} alt={item.tokenSymbol} className="h-8 w-8 rounded-full" />
+                        </div>
+                        <div className=" space-y-0">
+                          <div className="font-bold text-sm">{item.tokenSymbol}</div>
+                          <div className="text-xs font-medium text-muted-foreground/80 flex gap-1 box-content items-center">
+                            {item.tokenContractAddress.slice(0, 5) + '...' + item.tokenContractAddress.slice(-5)}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell className=" text-sm font-medium">{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 7 }).format(Number(item.price))}</TableCell>
+                  {item.change24H && (
+                    <TableCell className=" text-sm font-medium">
+                      {Number(item.change24H) > 1 ? (
+                        <span className="text-[#25a750]">{formatNumber(Number(item.change24H))}%</span>
+                      ) : (
+                        <span className="text-[#ca3f64]">{item.change24H}%</span>
+                      )}
+                    </TableCell>
+                  )}
+                  {item.change && (
+                    <TableCell className=" text-sm font-medium">
+                      {Number(item.change) > 1 ? (
+                        <span className="text-[#25a750]">{formatNumber(Number(item.change))}%</span>
+                      ) : (
+                        <span className="text-[#ca3f64]">{item.change}%</span>
+                      )}
+                    </TableCell>
+                  )}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </DialogContent>
+    </Dialog>
   )
 }
-
-// const SearchTokens = ({ data }: { data: TokenListDataType[] }) => {
-//   const [sheetOpen, setSheetOpen] = useState(false)
-//   let [tokensDefault, setTokensDefault] = useState<TokenListDataType[]>(data.slice(0, 4))
-//   const [searchValue, setSearchValue] = useState('')
-
-//   const searchToken = async () => {
-//     try {
-//       const data = await token.getTokenInfo(searchValue)
-//       if (data) {
-//         setTokensDefault(data)
-//         console.log(data)
-//       } else {
-//         toast.error('Cannot get token token info!')
-//       }
-//     } catch (error) {
-//       console.log(error)
-//     }
-//   }
-
-//   useEffect(() => {
-//     if (searchValue !== '' && searchValue.length === 44) {
-//       searchToken()
-//     } else {
-//       setTokensDefault(data.slice(0, 4))
-//     }
-//   }, [searchValue])
-
-//   useEffect(() => {
-//     if (!sheetOpen) {
-//       // setTokensDefault(data.slice(0, 4))
-//       setSearchValue('')
-//     }
-//   }, [sheetOpen])
-
-//   return (
-//     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-//       <Button variant={'outline'} className="sm:w-80 justify-start" onClick={() => setSheetOpen(true)}>
-//         <span className="">
-//           <Search className="w-5" />
-//         </span>
-//         <p className="lg:block md:block hidden">Search token address</p>
-//       </Button>
-//       <SheetContent side="bottom" className="h-[50vh]">
-//         <div className="flex w-full mb-5 py-1 border-b-[0.5px] border-opacity-10 border-white items-center">
-//           <span className="ml-[8px] mr-3">
-//             <Search className="w-4" />
-//           </span>
-//           <input
-//             className="bg-transparent text-sm w-full focus:outline-none "
-//             type="search"
-//             name=""
-//             id=""
-//             placeholder="Search token address"
-//             onChange={(e) => setSearchValue(e.target.value)}
-//           />
-//         </div>
-//         <div className="mb-2">
-//           Top Search
-//         </div>
-//         <div className="max-h-[35vh] overflow-auto">
-//           <Table className="overflow-auto no-scrollbar">
-//             <TableHeader className="sticky top-0 bg-background">
-//               <TableRow>
-//                 {/* <TableHead className="lg:table-cell hidden"></TableHead> */}
-//                 <TableHead className="font-light">Name</TableHead>
-//                 <TableHead className="text-end"><TableSort label="Price" /></TableHead>
-//                 <TableHead className="text-end"><TableSort label="Change (%)" /></TableHead>
-//                 <TableHead className="lg:table-cell hidden text-end"><TableSort label="Txns" /></TableHead>
-//                 <TableHead className="lg:table-cell hidden text-end"><TableSort label="Unique traders" /></TableHead>
-//                 <TableHead className="lg:table-cell hidden text-end"><TableSort label="Holders" /></TableHead>
-//                 <TableHead className="lg:table-cell hidden text-end"><TableSort label="Turnover" /></TableHead>
-//                 <TableHead className="lg:table-cell hidden text-end"><TableSort label="Market cap" /></TableHead>
-//                 <TableHead className="lg:table-cell hidden text-end"><TableSort label="Liquidity" /></TableHead>
-//                 <TableHead className="lg:table-cell hidden text-end"><TableSort label="Token Age" /></TableHead>
-//                 <TableHead className="font-light lg:table-cell hidden text-end">Auidit</TableHead>
-//               </TableRow>
-//             </TableHeader>
-//             <TableBody>
-//               {tokensDefault.filter(item => item.name !== '').map((item, index) => (
-//                 <TableRow key={index} className="cursor-pointer" onClick={() => window.open(`/tokens/details/${item.address}`)}>
-//                   <TableCell>
-//                     <div className="flex gap-5 items-center">
-//                       <div className="flex gap-3 items-center">
-//                         <div className="flex-shrink-0">
-//                           <img src={item.logoURI} alt={item.name} className="h-8 w-8 rounded-full" />
-//                         </div>
-//                         <div className=" space-y-0">
-//                           <div className="font-bold">{item.name}</div>
-//                           <div className="text-sm text-slate-600 flex gap-1 box-content items-center">
-//                             {item.address.slice(0, 5) + '...' + item.address.slice(-5)}
-//                           </div>
-//                         </div>
-//                       </div>
-//                     </div>
-//                   </TableCell>
-//                   <TableCell className="text-end">$123.25K</TableCell>
-//                   <TableCell className="text-end">-18.93%</TableCell>
-//                   <TableCell className="lg:table-cell hidden text-end">
-//                     <div className="space-y-1.5">
-//                       <p>155.49K</p>
-//                       <p className="text-xs"><span className="text-xs text-green-500">77.10K</span> / <span className="text-red-500">4.66K</span></p>
-//                     </div>
-//                   </TableCell>
-//                   <TableCell className="lg:table-cell hidden text-center">32.02K</TableCell>
-//                   <TableCell className="lg:table-cell hidden text-center">90.88K</TableCell>
-//                   <TableCell className="lg:table-cell hidden text-center">150.88M</TableCell>
-//                   <TableCell className="lg:table-cell hidden text-center">400.88M</TableCell>
-//                   <TableCell className="lg:table-cell hidden text-center">650.88M</TableCell>
-//                   <TableCell className="lg:table-cell hidden text-center">4M</TableCell>
-//                   <TableCell className="lg:table-cell hidden text-end">
-//                     <div className="w-full flex justify-end">
-//                       <ShieldCheck className="text-green-600" />
-//                     </div>
-//                   </TableCell>
-//                 </TableRow>
-//               ))}
-//             </TableBody>
-//           </Table>
-//         </div>
-//       </SheetContent>
-//     </Sheet>
-//   )
-// }
 
 interface SortingProps {
   tabsValue: string,
   connected?: boolean,
-  desc: boolean,
-  setDesc: Dispatch<SetStateAction<boolean>>
+  setRankBy: Dispatch<SetStateAction<number>>,
+  periodType: number
+  setPeriodType: Dispatch<SetStateAction<number>>,
+  setTradeNumPeriod: Dispatch<SetStateAction<number>>,
+  setChangePeriod: Dispatch<SetStateAction<number>>,
+  setVolumePeriod: Dispatch<SetStateAction<number>>,
+  setTxsPeriod: Dispatch<SetStateAction<number>>,
+  setTokensData: Dispatch<SetStateAction<TokenListDataType[]>>,
+  rankBy: number,
+  setDesc: Dispatch<SetStateAction<boolean>>,
+  setLiquidityMin: Dispatch<SetStateAction<number>>,
+  liquidtyMin: number,
+  volumeMin: number,
+  setVolumeMin: Dispatch<SetStateAction<number>>
 }
 
-const Sorting = ({ tabsValue, connected, desc, setDesc }: SortingProps) => {
+const Sorting = ({ tabsValue, connected, setRankBy, periodType, setPeriodType, setChangePeriod, setTradeNumPeriod, setTxsPeriod, setVolumePeriod, setTokensData, rankBy, setDesc, setLiquidityMin, liquidtyMin, volumeMin, setVolumeMin }: SortingProps) => {
   const [drawOpen, setDrawOpen] = useState(false)
   const [drawerTrendsOpen, setDrawerTrendsOpen] = useState(false)
+  const [liqOpen, setLiqOpen] = useState(false)
+  const [turnOpen, setTurnOpen] = useState(false)
+
+  const handler = (value: number) => {
+    setTokensData([])
+    setPeriodType(value)
+    setChangePeriod(value)
+    setTradeNumPeriod(value)
+    setTxsPeriod(value)
+    setVolumePeriod(value)
+    setLiquidityMin(5000)
+  }
+
+  const handlerRankBy = (value: number) => {
+    if (rankBy !== value) {
+      setTokensData([])
+      setRankBy(value)
+      setDesc(true)
+      setLiquidityMin(5000)
+    }
+  }
 
   return (
     <>
-
       {tabsValue === 'tokens' && (
         <div className="flex items-center justify-between">
           <div className="flex items-center text-sm gap-2">
             <div className="lg:flex hidden">
-              <Button variant={'ghost'} size={'sm'}>1m</Button>
-              <Button variant={'ghost'} size={'sm'}>1h</Button>
-              <Button variant={'ghost'} size={'sm'}>4h</Button>
-              <Button variant={'ghost'} size={'sm'}>24h</Button>
+
             </div>
+
+            <Button onClick={() => handler(1)} variant={periodType === 1 ? 'secondary' : 'ghost'} size={'sm'}>5m</Button>
+            <Button onClick={() => handler(2)} variant={periodType === 2 ? 'secondary' : 'ghost'} size={'sm'}>1h</Button>
+            <Button onClick={() => handler(3)} variant={periodType === 3 ? 'secondary' : 'ghost'} size={'sm'}>4h</Button>
+            <Button onClick={() => handler(4)} variant={periodType === 4 ? 'secondary' : 'ghost'} size={'sm'}>24h</Button>
 
             <div className="lg:hidden flex items-center gap-2">
               <Drawer open={drawOpen} onOpenChange={setDrawOpen}>
@@ -375,15 +273,18 @@ const Sorting = ({ tabsValue, connected, desc, setDesc }: SortingProps) => {
 
             <span className="lg:block hidden">|</span>
 
-            <Button variant="secondary" size={'sm'} className="lg:flex hidden">
+            <Button onClick={() => handlerRankBy(5)} variant={rankBy === 5 ? 'secondary' : 'ghost'} size={'sm'} className="lg:flex hidden">
               <Flame />
               <div>Trending</div>
             </Button>
-            <Button variant="ghost" size={'sm'} className="lg:flex hidden">
+            <Button onClick={() => handlerRankBy(9)} variant={rankBy === 9 ? 'secondary' : 'ghost'} size={'sm'} className="lg:flex hidden">
               <ChartNoAxesCombined />
               <div>Top searches</div>
             </Button>
-            <Button onClick={() => setDesc(!desc)} variant={desc ? 'ghost' : 'secondary'} size={'sm'} className="lg:flex hidden">
+            <Button onClick={() => {
+              handlerRankBy(8)
+              setDesc(false)
+            }} variant={rankBy === 8 ? 'secondary' : 'ghost'} size={'sm'} className="lg:flex hidden">
               <Sprout />
               <div>Newest</div>
             </Button>
@@ -391,87 +292,129 @@ const Sorting = ({ tabsValue, connected, desc, setDesc }: SortingProps) => {
             <span className="lg:block hidden">|</span>
 
             <div className="lg:block hidden">
-              <Select >
-                <SelectTrigger className="w-auto border-none hover:opacity-50 transition-opacity text-sm font-medium">
-                  <SelectValue placeholder="Liquidity" className="text-sm" />
+              <Select open={liqOpen} onOpenChange={setLiqOpen}>
+                <SelectTrigger className="w-auto border-none hover:opacity-80 transition-opacity gap-1 text-xs font-medium focus:ring-0">
+                  <SelectValue placeholder={`Liquidity ≥ ${formatNumber(liquidtyMin)}`} />
                 </SelectTrigger>
                 <SelectContent>
                   <div className="flex flex-col p-2">
-                    <div className="text-xs text-gray-600 mb-2">
+                    <div className="text-xs text-muted-foreground font-semibold mb-2">
                       Liquidity
                     </div>
                     <div className="grid grid-cols-2 gap-2 w-56 text-sm mb-3">
-                      <Button variant={"outline"} size={'sm'}>
+                      <Button onClick={() => {
+                        setLiquidityMin(10000)
+                        setTokensData([])
+                        setLiqOpen(false)
+                        setDesc(false)
+                        setRankBy(7)
+                      }} disabled={liquidtyMin === 10000} variant={"outline"} size={'sm'}>
                         ≥ $10k
                       </Button>
-                      <Button variant={"outline"} size={'sm'}>
+                      <Button onClick={() => {
+                        setLiquidityMin(50000)
+                        setTokensData([])
+                        setLiqOpen(false)
+                        setDesc(false)
+                        setRankBy(7)
+                      }} disabled={liquidtyMin === 50000} variant={"outline"} size={'sm'}>
                         ≥ $50k
                       </Button>
-                      <Button variant={"outline"} size={'sm'}>
+                      <Button onClick={() => {
+                        setLiquidityMin(100000)
+                        setTokensData([])
+                        setLiqOpen(false)
+                        setDesc(false)
+                        setRankBy(7)
+                      }} disabled={liquidtyMin === 100000} variant={"outline"} size={'sm'}>
                         ≥ $100k
                       </Button>
-                      <Button variant={"outline"} size={'sm'}>
+                      <Button onClick={() => {
+                        setLiquidityMin(500000)
+                        setTokensData([])
+                        setLiqOpen(false)
+                        setDesc(false)
+                        setRankBy(7)
+                      }} disabled={liquidtyMin === 500000} variant={"outline"} size={'sm'}>
                         ≥ $500k
                       </Button>
-                      <Input type="text" placeholder="Min" />
-                      <Input type="text" placeholder="Max" />
+                      {/* <Input type="number" placeholder="Min" className="md:text-xs h-8" onChange={(e) => (setLiqMinValue(Number(e.target.value)))} />
+                      <Input type="number" placeholder="Max" className="md:text-xs h-8" onChange={(e) => (setLiqMaxValue(Number(e.target.value)))} /> */}
                     </div>
-                    <div className="flex items-center gap-2">
+                    {/* <div className="flex items-center gap-2">
                       <Button variant={"destructive"} size={"icon"} className="rounded-full flex-shrink-0">
                         <Trash className="w-5 h-5" />
                       </Button>
-                      <Button className="w-full rounded-full" variant={"outline"} size={'sm'}>Apply</Button>
-                    </div>
+                      <Button onClick={hanlderApplyLiq} className="w-full rounded-full" variant={"outline"} size={'sm'}>Apply</Button>
+                    </div> */}
                   </div>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="lg:block hidden">
-              <Select>
-                <SelectTrigger className="w-auto border-none hover:opacity-50 transition-opacity text-sm font-medium">
-                  <SelectValue placeholder="Turnover" />
+              <Select open={turnOpen} onOpenChange={setTurnOpen}>
+                <SelectTrigger className="w-auto border-none hover:opacity-50 transition-opacity gap-1 text-xs font-medium focus:ring-0">
+                  <SelectValue placeholder={`Turnover ≥ ${formatNumber(volumeMin)}`} />
                 </SelectTrigger>
                 <SelectContent>
                   <div className="flex flex-col p-2">
-                    <div className="text-xs text-gray-600 mb-2">
+                    <div className="text-xs text-muted-foreground font-semibold mb-2">
                       Turnover
                     </div>
                     <div className="grid grid-cols-2 gap-2 w-56 text-sm mb-3">
-                      <Button variant={"outline"} size={'sm'}>
+                      <Button onClick={() => {
+                        setVolumeMin(10000)
+                        setTokensData([])
+                        setTurnOpen(false)
+                        setDesc(false)
+                        setRankBy(5)
+                      }} disabled={volumeMin === 10000} variant={"outline"} size={'sm'}>
                         ≥ $10k
                       </Button>
-                      <Button variant={"outline"} size={'sm'}>
+                      <Button onClick={() => {
+                        setVolumeMin(50000)
+                        setTokensData([])
+                        setTurnOpen(false)
+                        setDesc(false)
+                        setRankBy(5)
+                      }} disabled={volumeMin === 50000} variant={"outline"} size={'sm'}>
                         ≥ $50k
                       </Button>
-                      <Button variant={"outline"} size={'sm'}>
+                      <Button onClick={() => {
+                        setVolumeMin(100000)
+                        setTokensData([])
+                        setTurnOpen(false)
+                        setDesc(false)
+                        setRankBy(5)
+                      }} disabled={volumeMin === 100000} variant={"outline"} size={'sm'}>
                         ≥ $100k
                       </Button>
-                      <Button variant={"outline"} size={'sm'}>
+                      <Button onClick={() => {
+                        setVolumeMin(500000)
+                        setTokensData([])
+                        setTurnOpen(false)
+                        setDesc(false)
+                        setRankBy(5)
+                      }} disabled={volumeMin === 500000} variant={"outline"} size={'sm'}>
                         ≥ $500k
                       </Button>
-                      <Input type="text" placeholder="Min" className="text-sm" />
-                      <Input type="text" placeholder="Max" />
+
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Button variant={"destructive"} size={'sm'} className="rounded-full flex-shrink-0">
-                        <Trash className="w-5 h-5" />
-                      </Button>
-                      <Button className="w-full rounded-full" variant={"outline"} size={'sm'}>Apply</Button>
-                    </div>
+
                   </div>
                 </SelectContent>
               </Select>
             </div>
 
-            <div className="lg:block hidden">
+            {/* <div className="lg:block hidden">
               <Select>
-                <SelectTrigger className="w-auto border-none hover:opacity-50 transition-opacity text-sm font-medium">
+                <SelectTrigger className="w-auto border-none hover:opacity-50 transition-opacity gap-1 text-xs font-medium">
                   <SelectValue placeholder="Market Cap" />
                 </SelectTrigger>
                 <SelectContent>
                   <div className="flex flex-col p-2">
-                    <div className="text-xs text-gray-600 mb-2">
+                    <div className="text-xs text-muted-foreground font-semibold mb-2">
                       Market cap
                     </div>
                     <div className="grid grid-cols-2 gap-2 w-56 text-sm mb-3">
@@ -487,19 +430,12 @@ const Sorting = ({ tabsValue, connected, desc, setDesc }: SortingProps) => {
                       <Button variant={"outline"} size={'sm'}>
                         ≥ $500k
                       </Button>
-                      <Input type="text" placeholder="Min" />
-                      <Input type="text" placeholder="Max" />
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Button variant={"destructive"} size={"icon"} className="rounded-full flex-shrink-0">
-                        <Trash className="w-5 h-5" />
-                      </Button>
-                      <Button className="w-full rounded-full" variant={"outline"} size={'sm'}>Apply</Button>
-                    </div>
+
                   </div>
                 </SelectContent>
               </Select>
-            </div>
+            </div> */}
 
           </div>
           <div>
@@ -718,16 +654,68 @@ const Sorting = ({ tabsValue, connected, desc, setDesc }: SortingProps) => {
 }
 
 
-const Tokens = () => {
+const TokensPage = () => {
   const { connected } = useWallet()
   const [tabsValue, setTabsValue] = useState("tokens")
+
+  // data state
   const [tokensData, setTokensData] = useState<TokenListDataType[]>([])
+
+
+  // query state for api
+  const [changeMax, setChangeMax] = useState('')
+  const [changeMin, setChangeMin] = useState('')
+  const [changePeriod, setChangePeriod] = useState(4)
   const [desc, setDesc] = useState(true)
+  const [fdvMax, setFdvMax] = useState(0)
+  const [fdvMin, setFdvMin] = useState(0)
+  const [holdersMax, setHoldersMax] = useState(0)
+  const [holdersMin, setHoldersMin] = useState(0)
+  const [liquidityMax, setLiquidityMax] = useState(0)
+  const [liquidityMin, setLiquidityMin] = useState(5000)
+  const [marketCapMin, setMarketCapMin] = useState(0)
+  const [marketCapMax, setMarketCapMax] = useState(0)
+  const [periodType, setPeriodType] = useState(4)
+  const [rankBy, setRankBy] = useState(5)
+  const [riskFilter, setRiskFilter] = useState(true)
+  const [stableTokenFilter, setStableTokenFilter] = useState(true)
+  const [tokenAgeMax, setTokenAgeMax] = useState(0)
+  const [tokenAgeMin, setTokenAgeMin] = useState(0)
+  const [tokenAgeType, setTokenAgeType] = useState(2)
+  const [tradeNumMax, setTradeNumMax] = useState(0)
+  const [tradeNumMin, setTradeNumMin] = useState(0)
+  const [tradeNumPeriod, setTradeNumPeriod] = useState(4)
+  const [txsMax, setTxsMax] = useState(0)
+  const [txsMin, setTxsMin] = useState(0)
+  const [txsPeriod, setTxsPeriod] = useState(0)
+  const [uniqueTraderMax, setUniqueTraderMax] = useState(0)
+  const [uniqueTraderMin, setUniqueTraderMin] = useState(0)
+  const [uniqueTraderPeriod, setUniqueTraderPeriod] = useState(4)
+  const [volumeMax, setVolumeMax] = useState(0)
+  const [volumeMin, setVolumeMin] = useState(10000)
+  const [volumePeriod, setVolumePeriod] = useState(4)
+
 
   const getTokenData = async () => {
     try {
-      const resp = await axios.post(`/api/token/list`, {
-        desc
+      const resp = await axios(`/api/token/list`, {
+        params: {
+          chainIds: '501',
+          changePeriod,
+          desc,
+          liquidityMin,
+          periodType,
+          rankBy,
+          riskFilter,
+          stableTokenFilter,
+          tags: '0',
+          tokenAgeType,
+          tradeNumPeriod,
+          txsPeriod,
+          volumeMin,
+          volumePeriod,
+          liquidityMax,
+        }
       })
       setTokensData(resp.data)
     } catch (error) {
@@ -737,11 +725,38 @@ const Tokens = () => {
 
   useEffect(() => {
     getTokenData()
-    // const interval = setInterval(() => {
-    // }, 5000)
-
-    // return () => clearInterval(interval)
-  }, [desc])
+  }, [
+    changeMax,
+    changeMin,
+    changePeriod,
+    desc,
+    fdvMax,
+    fdvMin,
+    holdersMax,
+    holdersMin,
+    liquidityMax,
+    liquidityMin,
+    marketCapMax,
+    marketCapMin,
+    periodType,
+    rankBy,
+    riskFilter,
+    stableTokenFilter,
+    tokenAgeMax,
+    tokenAgeMin,
+    tokenAgeType,
+    tradeNumMax,
+    tradeNumMin,
+    tradeNumPeriod,
+    txsMax,
+    txsMin,
+    uniqueTraderMax,
+    uniqueTraderMin,
+    uniqueTraderPeriod,
+    volumeMax,
+    volumeMin,
+    volumePeriod,
+  ])
 
   return (
     <div className="py-8">
@@ -751,17 +766,108 @@ const Tokens = () => {
             <TabsTrigger value="tokens" className=" pb-1 data-[state=active]:border-b-2 data-[state=active]:border-foreground px-0 font-semibold rounded-none text-xl">Tokens</TabsTrigger>
             <TabsTrigger value="watchlist" className=" pb-1 data-[state=active]:border-b-2 data-[state=active]:border-foreground px-0 font-semibold rounded-none text-xl">Watchlist</TabsTrigger>
           </div>
-          {/* <SearchTokens data={tokensData} /> */}
+          <SearchTokens />
         </TabsList>
         <TabsContent value="tokens">
           <div className="space-y-3">
-            <Sorting tabsValue={tabsValue} connected={connected} desc={desc} setDesc={setDesc} />
-            <TokensTable data={tokensData} />
+            <Sorting tabsValue={tabsValue} connected={connected} setRankBy={setRankBy} periodType={periodType} setPeriodType={setPeriodType} setChangePeriod={setChangePeriod} setTradeNumPeriod={setTradeNumPeriod} setTxsPeriod={setTxsPeriod} setVolumePeriod={setVolumePeriod} setTokensData={setTokensData} rankBy={rankBy} setDesc={setDesc} liquidtyMin={liquidityMin} setLiquidityMin={setLiquidityMin} volumeMin={volumeMin} setVolumeMin={setVolumeMin} />
+            <div className="lg:max-h-full max-h-[70vh] overflow-auto">
+              <Table className="">
+                <TableHeader className="sticky top-0 bg-background">
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead className="font-medium text-xs">Name</TableHead>
+                    <TableHead className="text-end text-xs font-semibold">
+                      <TableSort rankBy={rankBy} desc={desc} rank={1} setDesc={setDesc} setRankBy={setRankBy} setTokensData={setTokensData} label="Price" />
+                    </TableHead>
+                    <TableHead className="text-end text-xs font-semibold">
+                      <TableSort rankBy={rankBy} desc={desc} rank={2} setDesc={setDesc} setRankBy={setRankBy} setTokensData={setTokensData} label="Change (%)" />
+                    </TableHead>
+                    <TableHead className="lg:table-cell hidden text-end text-xs font-semibold">
+                      <TableSort rankBy={rankBy} desc={desc} rank={3} setDesc={setDesc} setRankBy={setRankBy} setTokensData={setTokensData} label="Txns" />
+                    </TableHead>
+                    <TableHead className="lg:table-cell hidden text-end text-xs font-semibold">
+                      <TableSort rankBy={rankBy} desc={desc} rank={4} setDesc={setDesc} setRankBy={setRankBy} setTokensData={setTokensData} label="Unique traders" />
+                    </TableHead>
+                    <TableHead className="lg:table-cell hidden text-end text-xs font-semibold">
+                      <TableSort rankBy={rankBy} desc={desc} rank={10} setDesc={setDesc} setRankBy={setRankBy} setTokensData={setTokensData} label="Holders" />
+                    </TableHead>
+                    <TableHead className="lg:table-cell hidden text-end">
+                      <TableSort rankBy={rankBy} desc={desc} rank={5} setDesc={setDesc} setRankBy={setRankBy} setTokensData={setTokensData} label="Turnover" />
+                    </TableHead>
+                    <TableHead className="lg:table-cell hidden text-end text-xs font-semibold">
+                      <TableSort rankBy={rankBy} desc={desc} rank={6} setDesc={setDesc} setRankBy={setRankBy} setTokensData={setTokensData} label="Market cap" />
+                    </TableHead>
+                    <TableHead className="lg:table-cell hidden text-end text-xs font-semibold">
+                      <TableSort rankBy={rankBy} desc={desc} rank={7} setDesc={setDesc} setRankBy={setRankBy} setTokensData={setTokensData} label="Liquidity" />
+                    </TableHead>
+                    <TableHead className="lg:table-cell hidden text-end text-xs font-semibold">
+                      <TableSort rankBy={rankBy} desc={desc} rank={8} setDesc={setDesc} setRankBy={setRankBy} setTokensData={setTokensData} label="Token Age" />
+                    </TableHead>
+                    <TableHead className="lg:table-cell hidden text-end text-xs font-semibold">Auidit</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {tokensData && tokensData.length > 0 ? (
+                    tokensData.filter(item => item.tokenSymbol !== '').map((item, index) => (
+                      <TableRow key={index} className="cursor-pointer border-b-0" onClick={() => location.href = `/tokens/details/${item.tokenContractAddress}`}>
+                        <TableCell className="rounded-s-md">
+                          <div className="flex gap-5 items-center">
+                            <div className="flex gap-3 items-center">
+                              <div className="flex-shrink-0">
+                                <img src={item.tokenLogoUrl} alt={item.tokenSymbol} className="h-8 w-8 rounded-full" />
+                              </div>
+                              <div className=" space-y-0">
+                                <div className="font-bold text-sm">{item.tokenSymbol}</div>
+                                <div className="text-xs font-medium text-muted-foreground/80 flex gap-1 box-content items-center">
+                                  {item.tokenContractAddress.slice(0, 5) + '...' + item.tokenContractAddress.slice(-5)}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-end text-sm font-medium">{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 7 }).format(Number(item.price))}</TableCell>
+                        <TableCell className="text-center text-sm font-medium">
+                          {Number(item.change) > 1 ? (
+                            <span className="text-[#25a750]">{formatNumber(Number(item.change))}%</span>
+                          ) : (
+                            <span className="text-[#ca3f64]">{item.change}%</span>
+                          )}
+                        </TableCell>
+                        <TableCell className="lg:table-cell hidden text-end">
+                          <div className="space-y-0.5">
+                            <p className="text-sm font-medium">{formatNumber(Number(item.txs))}</p>
+                            <p className="text-xs"><span className="text-xs text-[#25a750]">{formatNumber(Number(item.txsBuy))}</span> / <span className="text-[#ca3f64]">{formatNumber(Number(item.txsSell))}</span></p>
+                          </div>
+                        </TableCell>
+                        <TableCell className="lg:table-cell hidden text-center text-sm font-medium">{formatNumber(Number(item.uniqueTraders))}</TableCell>
+                        <TableCell className="lg:table-cell hidden text-center text-sm font-medium">{formatNumber(Number(item.holders))}</TableCell>
+                        <TableCell className="lg:table-cell hidden text-center text-sm font-medium">
+                          {formatNumber(Number(item.volume))}
+                        </TableCell>
+                        <TableCell className="lg:table-cell hidden text-center text-sm font-medium">{formatNumber(Number(item.marketCap))}</TableCell>
+                        <TableCell className="lg:table-cell hidden text-center text-sm font-medium">{formatNumber(Number(item.liquidity))}</TableCell>
+                        <TableCell className="lg:table-cell hidden text-center text-sm font-medium capitalize">{formatRelativeTime(new Date(Number(item.firstPriceTime)))}</TableCell>
+                        <TableCell className="lg:table-cell hidden text-end rounded-e-md">
+                          <div className="w-full flex justify-end">
+                            {Number(item.riskLevel) > 3 ? (
+                              <ShieldCheck className="text-yellow-500" />
+                            ) : <ShieldCheck className="text-[#25a750]" />}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableSkeleton length={10} />
+                  )}
+                </TableBody>
+              </Table>
+            </div>
           </div>
         </TabsContent>
+
         <TabsContent value="watchlist">
           <div className="w-full h-[50vh] space-y-3">
-            <Sorting tabsValue={tabsValue} desc={desc} setDesc={setDesc} />
+            <Sorting tabsValue={tabsValue} setRankBy={setRankBy} periodType={periodType} setPeriodType={setPeriodType} setChangePeriod={setChangePeriod} setTradeNumPeriod={setTradeNumPeriod} setTxsPeriod={setTxsPeriod} setVolumePeriod={setVolumePeriod} setTokensData={setTokensData} rankBy={rankBy} setDesc={setDesc} liquidtyMin={liquidityMin} setLiquidityMin={setLiquidityMin} volumeMin={volumeMin} setVolumeMin={setVolumeMin} />
             {connected ? (
               ''
             ) : (
@@ -787,4 +893,4 @@ const Tokens = () => {
 };
 
 
-export default Tokens;
+export default TokensPage;
