@@ -32,7 +32,7 @@ export default function Home() {
     try {
       const data = await token.list(50);
       if (data) {
-        setTokenList(data.slice(0, 4));
+        setTokenList(data.filter(item => item.name !== '').slice(0, 4));
       }
     } catch (error) {}
   };
@@ -42,12 +42,16 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="w-full space-y-32">
+    <div className="w-full space-y-32 max-w-screen-xl xl:px-0 mx-auto">
       {/* Section CTA */}
+<<<<<<< HEAD
 
       <div
         className={`w-full flex items-center max-w-screen-lg mx-auto lg:flex-row flex-col lg:gap-0 gap-16 justify-between lg:h-[85vh] py-8`}
       >
+=======
+      <div className={`lg:w-3/4 w-full mx-auto flex items-center lg:flex-row flex-col lg:gap-0 gap-16 justify-between lg:h-[85vh] py-8`}>
+>>>>>>> 4813ced7ba8847e612dcf1a2f3807f9074db13d6
         <div className="space-y-8 text-left lg:w-1/2 w-full">
           <h1 className="text-5xl font-semibold leading-snug">
             Start and Build Your Crypto Portfolio Here
@@ -60,6 +64,7 @@ export default function Home() {
             Get Started
           </Button>
         </div>
+<<<<<<< HEAD
         <div className="lg:w-1/2 w-full h-full flex justify-center items-center">
           <video
             className="first-img lg:w-[58%]"
@@ -80,11 +85,14 @@ export default function Home() {
             />
             <track kind="captions" />
           </video>
+=======
+        <div className="lg:w-1/2 w-full h-full flex justify-end items-center">
+          <video className="first-img lg:w-[55%]" style={{ visibility: 'visible' }} autoPlay loop muted playsInline poster="https://www.okx.com/cdn/assets/imgs/243/F485DEA432C68FD9.png?x-oss-process=image/format,webp"><source src="https://www.okx.com/cdn/assets/files/243/79620084DA93114F.webm" type="video/webm" /><source src="https://www.okx.com/cdn/assets/files/243/78FBA21FD210816A.mp4" type="video/mp4" /><track kind="captions" /></video>
+>>>>>>> 4813ced7ba8847e612dcf1a2f3807f9074db13d6
         </div>
       </div>
 
       {/* Section TRENDING */}
-
       <div className="w-full items-start flex flex-col gap-3">
         <h2 className="font-medium">Token Trends</h2>
         <div className="w-full grid lg:grid-cols-4 gap-6 md:grid-cols-3 sm:grid-cols-2">
@@ -240,50 +248,24 @@ export default function Home() {
         <div className="w-full items-start">
           <h1 className="font-semibold text-2xl">Market Update</h1>
         </div>
-        <div className="w-full flex flex-col gap-3">
-          <p>Cryptocurrency Categories</p>
-          <div className="w-full flex">
-            <div className="flex gap-3 flex-wrap">
-              <button className="border rounded-md p-2 bg-foreground/5 hover:bg-white hover:text-black hover:font-semibold">
-                Popular
-              </button>
-              <button className="border rounded-md p-2 bg-foreground/5 hover:bg-white hover:text-black hover:font-semibold">
-                Metaverse
-              </button>
-              <button className="border rounded-md p-2 bg-foreground/5 hover:bg-white hover:text-black hover:font-semibold">
-                Gaming
-              </button>
-              <button className="border rounded-md p-2 bg-foreground/5 hover:bg-white hover:text-black hover:font-semibold">
-                Energy
-              </button>
-              <button className="border rounded-md p-2 bg-foreground/5 hover:bg-white hover:text-black hover:font-semibold">
-                Meme
-              </button>
-              <button className="border rounded-md p-2 bg-foreground/5 hover:bg-white hover:text-black hover:font-semibold">
-                Music
-              </button>
-              <button className="border rounded-md p-2 bg-foreground/5 hover:bg-white hover:text-black hover:font-semibold">
-                See All 12+
-              </button>
-            </div>
-          </div>
-        </div>
-        <div className="border rounded-lg p-8 bg-foreground/5">
+
+        <div className="border rounded-lg p-3 bg-foreground/5">
           <Table>
             <TableCaption>
-              <button>View All</button>
+              <Link href={'/tokens'} className="text-sm">View All</Link>
             </TableCaption>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[50px]">NO</TableHead>
+                <TableHead className="w-[50px] lg:table-cell hidden">NO</TableHead>
                 <TableHead>NAME</TableHead>
                 <TableHead>LAST PRICE</TableHead>
-                <TableHead>CHANGE</TableHead>
-                <TableHead>MARKET STATS</TableHead>
+                <TableHead className="lg:table-cell hidden  ">CHANGE</TableHead>
+                <TableHead className="lg:table-cell hidden">MARKET STATS</TableHead>
                 <TableHead className="text-right">TRADE</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
+<<<<<<< HEAD
               <TableRow>
                 <TableCell className="font-medium">1</TableCell>
                 <TableCell className="flex items-center gap-3">
@@ -379,6 +361,30 @@ export default function Home() {
                   <Button>Trade</Button>
                 </TableCell>
               </TableRow>
+=======
+              {Array.from({ length: 4 }, (_v, i) => (
+                <TableRow key={i}>
+                  <TableCell className="font-medium lg:table-cell hidden">{i + 1}</TableCell>
+                  <TableCell className="flex items-center gap-3">
+                    <img
+                      src="https://s2.coinmarketcap.com/static/img/coins/64x64/1.png"
+                      alt=""
+                      className="w-8 h-8 object-cover"
+                    />
+                    <p className="font-medium">Bitcoin | BTC</p>
+                  </TableCell>
+                  <TableCell>$56,623.54</TableCell>
+                  <TableCell className="lg:table-cell hidden">1.4%</TableCell>
+                  <TableCell className="lg:table-cell hidden">
+                    <img src="/chart-btc-landingPage.svg" alt="" />
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Button size={'sm'}>Trade</Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+
+>>>>>>> 4813ced7ba8847e612dcf1a2f3807f9074db13d6
             </TableBody>
           </Table>
         </div>
