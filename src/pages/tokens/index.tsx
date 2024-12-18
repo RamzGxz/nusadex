@@ -194,6 +194,7 @@ const Sorting = ({ tabsValue, connected, setRankBy, periodType, setPeriodType, s
   const [turnOpen, setTurnOpen] = useState(false)
 
   const handler = (value: number) => {
+    setDrawOpen(false)
     setTokensData([])
     setPeriodType(value)
     setChangePeriod(value)
@@ -204,6 +205,7 @@ const Sorting = ({ tabsValue, connected, setRankBy, periodType, setPeriodType, s
   }
 
   const handlerRankBy = (value: number) => {
+    setDrawerTrendsOpen(false)
     if (rankBy !== value) {
       setTokensData([])
       setRankBy(value)
@@ -218,51 +220,70 @@ const Sorting = ({ tabsValue, connected, setRankBy, periodType, setPeriodType, s
         <div className="flex items-center justify-between">
           <div className="flex items-center text-sm gap-2">
             <div className="lg:flex hidden">
-
+              <Button onClick={() => handler(1)} variant={periodType === 1 ? 'secondary' : 'ghost'} size={'sm'}>5m</Button>
+              <Button onClick={() => handler(2)} variant={periodType === 2 ? 'secondary' : 'ghost'} size={'sm'}>1h</Button>
+              <Button onClick={() => handler(3)} variant={periodType === 3 ? 'secondary' : 'ghost'} size={'sm'}>4h</Button>
+              <Button onClick={() => handler(4)} variant={periodType === 4 ? 'secondary' : 'ghost'} size={'sm'}>24h</Button>
             </div>
-
-            <Button onClick={() => handler(1)} variant={periodType === 1 ? 'secondary' : 'ghost'} size={'sm'}>5m</Button>
-            <Button onClick={() => handler(2)} variant={periodType === 2 ? 'secondary' : 'ghost'} size={'sm'}>1h</Button>
-            <Button onClick={() => handler(3)} variant={periodType === 3 ? 'secondary' : 'ghost'} size={'sm'}>4h</Button>
-            <Button onClick={() => handler(4)} variant={periodType === 4 ? 'secondary' : 'ghost'} size={'sm'}>24h</Button>
-
             <div className="lg:hidden flex items-center gap-2">
               <Drawer open={drawOpen} onOpenChange={setDrawOpen}>
-                <Button variant={'ghost'} size={'sm'} onClick={() => setDrawOpen(true)}>24h</Button>
+                <Button variant={'ghost'} size={'sm'} onClick={() => setDrawOpen(true)}>
+                  {periodType === 1 && '5m'}
+                  {periodType === 2 && '1h'}
+                  {periodType === 3 && '4h'}
+                  {periodType === 4 && '24h'}
+                </Button>
                 <DrawerContent>
-                  <DrawerHeader className="space-y-2">
-                    <Button variant={'ghost'} onClick={() => {
-                      setDrawOpen(false)
-                    }}>1m</Button>
-                    <Button variant={'ghost'} onClick={() => {
-                      setDrawOpen(false)
-                    }}>1h</Button>
-                    <Button variant={'ghost'} onClick={() => {
-                      setDrawOpen(false)
-                    }}>4h</Button>
-                    <Button variant={'ghost'} onClick={() => {
-                      setDrawOpen(false)
-                    }}>24h</Button>
+                  <DrawerHeader>
+                    <div className="space-y-2 z-50">
+                      <Button variant={periodType === 1 ? 'secondary' : 'ghost'} onClick={() => {
+                        handler(1)
+
+                      }} className="w-full">5m</Button>
+                      <Button variant={periodType === 2 ? 'secondary' : 'ghost'} onClick={() => {
+                        handler(2)
+
+                      }} className="w-full">1h</Button>
+                      <Button variant={periodType === 3 ? 'secondary' : 'ghost'} onClick={() => {
+                        handler(3)
+
+                      }} className="w-full">4h</Button>
+                      <Button variant={periodType === 4 ? 'secondary' : 'ghost'} onClick={() => {
+                        handler(4)
+
+                      }} className="w-full">24h</Button>
+                    </div>
                   </DrawerHeader>
                 </DrawerContent>
               </Drawer>
               <span className="lg:hidden block">|</span>
               <Drawer open={drawerTrendsOpen} onOpenChange={setDrawerTrendsOpen}>
-                <Button variant={'secondary'} size={'sm'} onClick={() => setDrawerTrendsOpen(true)}>
+                {rankBy === 5 && <Button variant={'secondary'} size={'sm'} onClick={() => setDrawerTrendsOpen(true)}>
                   <Flame />
                   <div>Trending</div>
-                </Button>
+                </Button>}
+                {rankBy === 9 && <Button variant={'secondary'} size={'sm'} onClick={() => setDrawerTrendsOpen(true)}>
+                  <ChartNoAxesCombined />
+                  <div>Top searches</div>
+                </Button>}
+                {rankBy === 8 && <Button variant={'secondary'} size={'sm'} onClick={() => setDrawerTrendsOpen(true)}>
+                  <Sprout />
+                  <div>Newest</div>
+                </Button>}
                 <DrawerContent>
                   <DrawerHeader className="space-y-2">
-                    <Button variant="secondary" onClick={() => setDrawerTrendsOpen(false)}>
+                    <Button variant={rankBy === 5 ? 'secondary' : 'ghost'} onClick={() => handlerRankBy(5)}>
                       <Flame />
                       <div>Trending</div>
                     </Button>
-                    <Button variant="ghost" onClick={() => setDrawerTrendsOpen(false)}>
+                    <Button variant={rankBy === 9 ? 'secondary' : 'ghost'} onClick={() => handlerRankBy(9)}>
                       <ChartNoAxesCombined />
                       <div>Top searches</div>
                     </Button>
-                    <Button variant="ghost" onClick={() => setDrawerTrendsOpen(false)}>
+                    <Button variant={rankBy === 8 ? 'secondary' : 'ghost'} onClick={() => {
+                      handlerRankBy(8)
+                      setDesc(false)
+                    }}>
                       <Sprout />
                       <div>Newest</div>
                     </Button>
@@ -724,7 +745,7 @@ const TokensPage = () => {
   }
 
   useEffect(() => {
-    const interval = setInterval(() =>{
+    const interval = setInterval(() => {
       getTokenData()
     }, 3000)
     return () => clearInterval(interval)
