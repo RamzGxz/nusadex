@@ -12,15 +12,17 @@ import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import token from "@/lib/sdk/tokens";
-import { ApiV3Token } from "@raydium-io/raydium-sdk-v2";
+import calculateProgress from "@/lib/calcualteProgress";
+import formatNumber from "@/lib/formatNumber";
+import { TokenDetailsDataType } from "@/types/tokenDetailsDataTypes";
+import { TokenSearchDataTypes } from "@/types/tokenSearchDataTypes";
+import axios from "axios";
 import {
-  ChevronRight, Copy,
+  Copy,
   Earth,
   LoaderCircle,
   Mouse,
-  PlusCircle, ShieldAlertIcon,
-  Star, User
+  PlusCircle, Star, User
 } from "lucide-react";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -28,11 +30,12 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 // import { useEffect, useState } from "react";
 
-export default function index() {
+const TokenDetailsPage = () => {
   const { id } = useRouter().query
-  const [tokenInfo, setTokenInfo] = useState<ApiV3Token>({} as ApiV3Token)
-  const [trendingToken, setTrendingToken] = useState<ApiV3Token[]>([])
-  const [tokenPrice, setTokenPrice] = useState(0)
+  const [tokenInfo, setTokenInfo] = useState<TokenDetailsDataType[]>([])
+  const [trendingToken, setTrendingToken] = useState<TokenSearchDataTypes[]>([])
+  const router = useRouter()
+  const [type, setType] = useState(1)
 
   const handleCopy = (text: string) => {
     navigator.clipboard
@@ -47,52 +50,48 @@ export default function index() {
 
   const getInfo = async () => {
     try {
-      const data = await token.getTokenInfo(String(id && id))
-      setTokenInfo(data[0])
-
+      const resp = await axios(`/api/token/details/${String(id)}`, {
+        params:{
+          type
+        }
+      })
+      setTokenInfo(resp.data)
     } catch (error) {
+      toast.error('Failed to get token info, please reload the page!')
       console.log(error)
-      toast.error('Failed to get token info!')
     }
   }
+
 
   const getTrendingToken = async () => {
     try {
-      const data = await token.list(150)
-      if (data) {
-        setTrendingToken(data)
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const getTokenPrice = async () => {
-    try {
-      const resp = await token.getPrice(String(id))
-      setTokenPrice(Number(resp))
-      console.log(resp)
+      const resp = await axios('/api/token/search/trending')
+      setTrendingToken(resp.data)
     } catch (error) {
       console.log(error)
     }
   }
 
   useEffect(() => {
-    if (id !== undefined) {
-      getInfo()
+    if (router.isReady && id) {
+
+      const interval = setInterval(() => {
+        getInfo()
+      }, 2000)
       getTrendingToken()
-      getTokenPrice()
+      return () => clearInterval(interval)
     }
-  }, [id])
+  }, [router.isReady, id, type])
 
   return (
     <>
-      {id !== undefined ? (
+      {id !== undefined && tokenInfo && tokenInfo.length > 0 && trendingToken && trendingToken.length > 0 ? (
         <>
           <Head>
-            <title>{tokenInfo.name} {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(tokenPrice)} | Nusadex Trading</title>
+            <title>{tokenInfo[0].info.tokenSymbol} ${formatNumber(Number(tokenInfo[0].info.price))} | Nusadex Trading</title>
           </Head>
-          <div className="w-full h-full lg:pt-3 py-6 space-y-5">
+          <div className="w-full h-full lg:pt-3 py-6 space-y-3">
+
             <div className="flex justify-between lg:items-center items-start">
               <div className="flex lg:items-end items-start lg:flex-row flex-col gap-3">
                 <div className=" flex items-center gap-3">
@@ -100,11 +99,11 @@ export default function index() {
                     <Star />
                   </Button>
                   <div className="flex items-center gap-2">
-                    <img src={tokenInfo.logoURI} alt="" className="w-14 h-14 object-cover rounded-full p-1" />
+                    <img src={tokenInfo[0].info.tokenLogoUrl} alt="" className="w-14 h-14 object-cover rounded-full p-1" />
                     <div className="space-y-0 leading-snug">
-                      <p>{tokenInfo.name}</p>
+                      <p className="font-bold">{tokenInfo[0].info.tokenName}</p>
                       <div className="flex items-center gap-2">
-                        <p className="text-muted-foreground font-light">{String(id).slice(0, 5) + '...' + String(id).slice(-5)}</p>
+                        <p className="text-muted-foreground text-sm font-medium">{String(id).slice(0, 5) + '...' + String(id).slice(-5)}</p>
                         <TooltipProvider delayDuration={50}>
                           <Tooltip>
                             <TooltipTrigger onClick={() => handleCopy(String(id && id))}><Copy strokeWidth={1} size={14} /></TooltipTrigger>
@@ -124,24 +123,24 @@ export default function index() {
                     <div className="px-2 flex items-center gap-1 py-1 bg-[#2e2e2e] rounded-md">
                       <Mouse strokeWidth={1.5} size={14} />
                       <p className="text-xs lg:block hidden">Suspicious : </p>
-                      <p className="text-[#95F121] text-xs">2.5%</p>
+                      <p className="text-[#95F121] text-xs">{formatNumber(Number(tokenInfo[0].overview.marketInfo.suspiciousRatio) * 100)}%</p>
                     </div>
                     <div className="px-2 flex items-center gap-1 py-1 bg-[#2e2e2e] rounded-md">
                       <PlusCircle strokeWidth={1.5} size={14} />
                       <p className="text-xs lg:block hidden">Sniper : </p>
-                      <p className="text-[#95F121] text-xs">2.5%</p>
+                      <p className="text-xs">{tokenInfo[0].ranking.sniperTagHolderAmount}</p>
                     </div>
                     <div className="px-2 flex items-center gap-1 py-1 bg-[#2e2e2e] rounded-md">
                       <User strokeWidth={1.5} size={14} />
                       <p className="text-xs lg:block hidden">Top holder :</p>
-                      <p className="text-[#95F121] text-xs">2.5%</p>
+                      <p className="text-[#95F121] text-xs">{Number(tokenInfo[0].ranking.top10HoldAmountPercentage).toPrecision(3)}%</p>
                     </div>
                     <div className="flex items-center gap-1 bg-[#2e2e2e] px-2 py-1 rounded-md">
-                      <button>
+                      <button onClick={() => window.open(tokenInfo[0].overview.socialMedia.officialWebsite)}>
                         <Earth size={14} />
                       </button>
                       <Separator orientation="vertical" className="h-4 lg:block hidden" />
-                      <button className="lg:block hidden">
+                      <button className="lg:block hidden" onClick={() => window.open(tokenInfo[0].overview.socialMedia.telegram)}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-brand-telegram text-sm h-[16px]">
                           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                           <path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4" />
@@ -149,7 +148,7 @@ export default function index() {
                       </button>
                       <Separator orientation="vertical" className="h-4 lg:block hidden" />
 
-                      <button className="lg:block hidden">
+                      <button className="lg:block hidden" onClick={() => window.open(tokenInfo[0].overview.socialMedia.twitter)}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-brand-x text-sm h-[16px]">
                           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                           <path d="M4 4l11.733 16h4.267l-11.733 -16z" />
@@ -164,22 +163,23 @@ export default function index() {
               <div className="flex items-center gap-5">
                 <div className="space-y-0 text-sm">
                   <p className="font-light">Price</p>
-                  <p className="font-semibold">{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(tokenPrice)}</p>
+                  <p className="font-semibold">${formatNumber(Number(tokenInfo[0].info.price))}</p>
                 </div>
                 <div className="space-y-0 text-sm lg:block hidden">
                   <p className="font-light">Market Cap</p>
-                  <p className="font-semibold">$174.58M</p>
+                  <p className="font-semibold">${formatNumber(Number(tokenInfo[0].info.marketCap))}</p>
                 </div>
                 <div className="space-y-0 text-sm lg:block hidden">
                   <p>Liquidity</p>
-                  <p className="font-semibold">$174.58M</p>
+                  <p className="font-semibold">${formatNumber(Number(tokenInfo[0].overview.marketInfo.totalLiquidity))}</p>
                 </div>
                 <div className="space-y-0 text-sm lg:block hidden">
                   <p>Holders</p>
-                  <p className="font-semibold">$174.58M</p>
+                  <p className="font-semibold">{formatNumber(Number(tokenInfo[0].overview.marketInfo.holders))}</p>
                 </div>
               </div>
             </div>
+
             <div className="w-full lg:flex-row flex-col lg:gap-0 gap-5 flex items-start justify-between">
               {/* left */}
               <div className="w-[20%] h-[80vh] border-t border-r p-2 lg:block hidden">
@@ -204,21 +204,30 @@ export default function index() {
                             </TableRow>
                           </TableHeader>
                           <TableBody>
-                            {trendingToken && trendingToken.length > 0 && trendingToken.filter(item => item.name !== '').map((item, index) => (
-                              <TableRow key={index} className="border-b-0 cursor-pointer" onClick={() => location.href = `/tokens/details/${item.address}`}>
+                            {trendingToken && trendingToken.length > 0 && trendingToken.filter(item => item.chainId.includes('501')).map((item, index) => (
+                              <TableRow key={index} className="border-b-0 cursor-pointer" onClick={() => location.href = `/tokens/details/${item.tokenContractAddress}`}>
                                 <TableCell className="text-xs">
                                   <div className="flex items-center gap-2">
-                                    <img src={item.logoURI} alt="" className="w-8 h-8 rounded-full object-cover" />
+                                    <img src={item.tokenLogoUrl} alt="" className="w-8 h-8 rounded-full object-cover" />
                                     <div>
-                                      <p className="font-semibold">{item.symbol}</p>
-                                      <p className="font-normal text-muted-foreground">$21.92M</p>
+                                      <p className="font-semibold">{item.tokenSymbol}</p>
+                                      <p className="font-normal text-muted-foreground">{formatNumber(Number(item.marketCap))}</p>
                                     </div>
                                   </div>
                                 </TableCell>
                                 <TableCell className="text-end">
                                   <div>
-                                    <p className="font-semibold">$0.0025</p>
-                                    <p className="text-xs text-green-500">+1,830.02%</p>
+                                    <p className="font-semibold">${formatNumber(Number(item.price))}</p>
+                                    <p className="">
+                                      {item.change24H && (
+                                        Number(item.change24H) > 0 ? <span className="text-[#25a750]">{formatNumber(Number(item.change24H))}%</span>
+                                          : <span className="text-[#ca3f64]">{item.change24H}%</span>
+                                      )}
+                                      {item.change && (
+                                        Number(item.change) > 0 ? <span className="text-[#25a750]">{formatNumber(Number(item.change))}%</span>
+                                          : <span className="text-[#ca3f64]">{item.change}%</span>
+                                      )}
+                                    </p>
                                   </div>
                                 </TableCell>
                               </TableRow>
@@ -339,7 +348,7 @@ export default function index() {
                   </TabsContent>
                   <TabsContent value="sell">
                     <div className="space-y-3">
-                      <h1 className="text-sm font-semibold">Amount ({tokenInfo.symbol})</h1>
+                      <h1 className="text-sm font-semibold">Amount ({tokenInfo[0].info.tokenSymbol})</h1>
                       <Input type="number" placeholder="Enter amount of DRUGS" />
                       <div className="flex items-center w-full justify-between gap-3">
                         <Button variant={'outline'} size={'sm'} className="w-full">25%</Button>
@@ -356,35 +365,50 @@ export default function index() {
                 <div className="space-y-3 w-full border-t pt-3">
                   <h1 className="text-lg font-semibold">Transaction Info</h1>
                   <div className="w-full flex justify-between gap-3">
-                    <Button variant={'secondary'} size={'sm'} className="w-full">5M</Button>
-                    <Button variant={'secondary'} size={'sm'} className="w-full">15M</Button>
-                    <Button variant={'secondary'} size={'sm'} className="w-full">1H</Button>
-                    <Button variant={'secondary'} size={'sm'} className="w-full">24H</Button>
+                    <Button onClick={() => setType(4)} variant={type === 4 ? 'secondary' : 'outline'} size={'sm'} className="w-full h-fit p-1 flex flex-col gap-0">
+                      <p>5m</p>
+                      <p className={`${Number(tokenInfo[0].overview.marketInfo.priceChange5M) > 1 ? 'text-[#25a750]' : 'text-[#ca3f64]'}`}>{tokenInfo[0].overview.marketInfo.priceChange5M}%</p>
+                    </Button>
+                    <Button onClick={() => setType(1)} variant={type === 1 ? 'secondary' : 'outline'} size={'sm'} className="w-full h-fit p-1 flex flex-col gap-0">
+                      <p>1h</p>
+                      <p className={`${Number(tokenInfo[0].overview.marketInfo.priceChange1H) > 1 ? 'text-[#25a750]' : 'text-[#ca3f64]'}`}>{tokenInfo[0].overview.marketInfo.priceChange1H}%</p>
+                    </Button>
+                    <Button onClick={() => setType(2)} variant={type === 2 ? 'secondary' : 'outline'} size={'sm'} className="w-full h-fit p-1 flex flex-col gap-0">
+                      <p>4h</p>
+                      <p className={`${Number(tokenInfo[0].overview.marketInfo.priceChange4H) > 1 ? 'text-[#25a750]' : 'text-[#ca3f64]'}`}>{tokenInfo[0].overview.marketInfo.priceChange4H}%</p>
+                    </Button>
+                    <Button onClick={() => setType(3)} variant={type === 3 ? 'secondary' : 'outline'} size={'sm'} className="w-full h-fit p-1 flex flex-col gap-0">
+                      <p>24h</p>
+                      <p className={`${Number(tokenInfo[0].overview.marketInfo.priceChange24H) > 1 ? 'text-[#25a750]' : 'text-[#ca3f64]'}`}>{tokenInfo[0].overview.marketInfo.priceChange24H}%</p>
+                    </Button>
                   </div>
                   <div className="space-y-4">
-                    <div className="space-y-1">
-                      <h1>Transactions: 33</h1>
-                      <Progress value={33} />
-                      <p className="text-xs font-light">Buys (33)</p>
+                    <div className="space-y-1.5">
+                      <h1 className="text-sm font-medium">Transactions: {formatNumber(Number(tokenInfo[0].change.totalNo))}</h1>
+                      <Progress value={calculateProgress(Number(tokenInfo[0].change.buyNo), Number(tokenInfo[0].change.sellNo))} />
+                      <div className="w-full flex justify-between items-center">
+                        <p className="text-[12px] font-semibold text-[#25a750]">Buys ({formatNumber(Number(tokenInfo[0].change.buyNo))})</p>
+                        <p className="text-[12px] font-semibold text-[#ca3f64]">Sells ({formatNumber(Number(tokenInfo[0].change.sellNo))})</p>
+                      </div>
                     </div>
-                    <div className="space-y-1">
-                      <h1>Turnover: 450K</h1>
+                    {/* <div className="space-y-1.5">
+                      <h1>Turnover: {formatNumber(Number(tokenInfo[0].info.volume))}</h1>
                       <Progress value={88} />
-                      <p className="text-xs font-light">Buy value (33k)</p>
+                      <p className="text-[12px] font-light">Buy value (33k)</p>
                     </div>
-                    <div className="space-y-1">
+                    <div className="space-y-1.5">
                       <h1>Trader: 33</h1>
                       <Progress value={33} />
-                      <p className="text-xs font-light">Buyers (33)</p>
-                    </div>
+                      <p className="text-[12px] font-light">Buyers (33)</p>
+                    </div> */}
                   </div>
                 </div>
                 <div className="space-y-3 pt-2 border-t">
                   <div className="flex items-center gap-2">
-                    <img src={tokenInfo.logoURI} alt="" className="w-14 h-14 object-cover rounded-full p-1" />
+                    <img src={tokenInfo[0].info.tokenLogoUrl} alt="" className="w-14 h-14 object-cover rounded-full p-1" />
                     <div className="space-y-0 leading-snug">
-                      <p className="">{tokenInfo.symbol}</p>
-                      <p className="text-muted-foreground text-sm">{tokenInfo.name}</p>
+                      <p className="font-semibold">{tokenInfo[0].info.tokenSymbol}</p>
+                      <p className="text-muted-foreground text-sm">{tokenInfo[0].info.tokenName}</p>
                     </div>
                   </div>
 
@@ -392,27 +416,27 @@ export default function index() {
 
                     <div className="w-full flex flex-col justify-center items-center gap-0.5 p-2 bg-secondary rounded-md">
                       <p className="text-xs text-muted-foreground">Audit</p>
-                      <SheetAudit />
+                      <SheetAudit data={tokenInfo[0].check} />
                     </div>
                     <div className="w-full flex flex-col justify-center items-center gap-0.5 p-2 bg-secondary rounded-md">
                       <p className="text-xs text-muted-foreground">Market Cap</p>
-                      <p className="text-xs">$133K</p>
+                      <p className="text-xs">${formatNumber(Number(tokenInfo[0].info.marketCap))}</p>
                     </div>
                     <div className="w-full flex flex-col justify-center items-center gap-0.5 p-2 bg-secondary rounded-md">
                       <p className="text-xs text-muted-foreground">Holders</p>
-                      <p className="text-xs">100K</p>
+                      <p className="text-xs">{formatNumber(Number(tokenInfo[0].ranking.totalHolderAmount))}</p>
                     </div>
                     <div className="w-full flex flex-col justify-center items-center gap-0.5 p-2 bg-secondary rounded-md">
                       <p className="text-xs text-muted-foreground">Liquidity</p>
-                      <DialogLiquidityDetails image={tokenInfo.logoURI} name={tokenInfo.name} />
+                      <DialogLiquidityDetails image={tokenInfo[0].info.tokenLogoUrl} name={tokenInfo[0].info.tokenName} liq={tokenInfo[0].overview.marketInfo.totalLiquidity} />
                     </div>
                     <div className="w-full flex flex-col justify-center items-center gap-0.5 p-2 bg-secondary rounded-md">
                       <p className="text-xs text-muted-foreground">Circulating Supply</p>
-                      <p className="text-xs">$150K</p>
+                      <p className="text-xs">{formatNumber(Number(tokenInfo[0].info.circulatingSupply))}</p>
                     </div>
                     <div className="w-full flex flex-col justify-center items-center gap-0.5 p-2 bg-secondary rounded-md">
                       <p className="text-xs text-muted-foreground">Maximum Supply</p>
-                      <p className="text-xs">$150K</p>
+                      <p className="text-xs">{formatNumber(Number(tokenInfo[0].overview.marketInfo.maxSupply))}</p>
                     </div>
 
                   </div>
@@ -432,3 +456,4 @@ export default function index() {
     </>
   );
 }
+export default TokenDetailsPage

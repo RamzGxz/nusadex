@@ -60,6 +60,7 @@ const SearchTokens = () => {
   const [sheetOpen, setSheetOpen] = useState(false)
   const [tokensDefault, setTokensDefault] = useState<TokenSearchDataTypes[]>([])
   const [searchValue, setSearchValue] = useState('')
+  const [loading, setLoading] = useState(false)
 
 
   const getHotSearch = async () => {
@@ -73,7 +74,6 @@ const SearchTokens = () => {
 
   useEffect(() => () => {
     getHotSearch()
-
   }, [])
 
   useEffect(() => {
@@ -82,6 +82,25 @@ const SearchTokens = () => {
       setSearchValue('')
     }
   }, [sheetOpen])
+
+  const handleSearch = async () => {
+    setLoading(true)
+    try {
+      const resp = await axios(`/api/token/search?keyword=${searchValue}`)
+      setTokensDefault(resp.data)
+      setLoading(false)
+    } catch (error) {
+      console.log(false)
+    }
+  }
+
+  useEffect(() => {
+    if (searchValue !== '') {
+      handleSearch()
+    } else {
+      getHotSearch()
+    }
+  }, [searchValue])
 
   return (
     <Dialog open={sheetOpen} onOpenChange={setSheetOpen}>
@@ -118,17 +137,16 @@ const SearchTokens = () => {
                 <TableHead className="font-medium text-xs">Name</TableHead>
                 <TableHead className=""><TableSort label="Price" sortView={false} /></TableHead>
                 <TableHead className=""><TableSort label="24h Change" sortView={false} /></TableHead>
-
               </TableRow>
             </TableHeader>
-            <TableBody>
-              {tokensDefault.filter(item => item.tokenSymbol !== '' && !item.tokenContractAddress.includes('0x')).map((item, index) => (
+            <TableBody className="h-full">
+              {tokensDefault.filter(item => item.tokenSymbol !== '' && item.chainId.includes('501')).map((item, index) => (
                 <TableRow key={index} className="cursor-pointer border-b-0" onClick={() => location.href = `/tokens/details/${item.tokenContractAddress}`}>
                   <TableCell className="rounded-s-md">
                     <div className="flex gap-5 items-center">
                       <div className="flex gap-3 items-center">
                         <div className="flex-shrink-0">
-                          <img src={item.tokenLogoUrl} alt={item.tokenSymbol} className="h-8 w-8 rounded-full" />
+                          <img src={item.tokenLogoUrl} alt={item.tokenSymbol} className="h-8 w-8 rounded-full" loading="lazy" />
                         </div>
                         <div className=" space-y-0">
                           <div className="font-bold text-sm">{item.tokenSymbol}</div>
@@ -139,7 +157,7 @@ const SearchTokens = () => {
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell className=" text-sm font-medium">{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 7 }).format(Number(item.price))}</TableCell>
+                  <TableCell className=" text-sm font-medium">{formatNumber(Number(item.price))}</TableCell>
                   {item.change24H && (
                     <TableCell className=" text-sm font-medium">
                       {Number(item.change24H) > 1 ? (
@@ -745,10 +763,10 @@ const TokensPage = () => {
   }
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      getTokenData()
-    }, 3000)
-    return () => clearInterval(interval)
+    getTokenData()
+    // const interval = setInterval(() => {
+    // }, 3000)
+    // return () => clearInterval(interval)
   }, [
     changeMax,
     changeMin,
@@ -836,20 +854,20 @@ const TokensPage = () => {
                       <TableRow key={index} className="cursor-pointer border-b-0" onClick={() => location.href = `/tokens/details/${item.tokenContractAddress}`}>
                         <TableCell className="rounded-s-md">
                           <div className="flex gap-5 items-center">
-                            <div className="flex gap-3 items-center">
+                            <div className="flex lg:gap-3 gap-2 items-center">
                               <div className="flex-shrink-0">
-                                <img src={item.tokenLogoUrl} alt={item.tokenSymbol} className="h-8 w-8 rounded-full" />
+                                <img src={item.tokenLogoUrl} alt={item.tokenSymbol} className="lg:h-8 h-8 lg:w-8 w-8 object-cover rounded-full" />
                               </div>
-                              <div className=" space-y-0">
-                                <div className="font-bold text-sm">{item.tokenSymbol}</div>
-                                <div className="text-xs font-medium text-muted-foreground/80 flex gap-1 box-content items-center">
+                              <div className=" lg:space-y-0 -space-y-0.5">
+                                <div className="font-bold lg:text-sm text-[12px]">{item.tokenSymbol}</div>
+                                <div className="lg:text-xs text-[10px] font-medium text-muted-foreground/80 gap-1 box-content items-center">
                                   {item.tokenContractAddress.slice(0, 5) + '...' + item.tokenContractAddress.slice(-5)}
                                 </div>
                               </div>
                             </div>
                           </div>
                         </TableCell>
-                        <TableCell className="text-end text-sm font-medium">{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 7 }).format(Number(item.price))}</TableCell>
+                        <TableCell className="text-end text-sm font-medium">${formatNumber(Number(item.price))}</TableCell>
                         <TableCell className="text-center text-sm font-medium">
                           {Number(item.change) > 1 ? (
                             <span className="text-[#25a750]">{formatNumber(Number(item.change))}%</span>

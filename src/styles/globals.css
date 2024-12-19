@@ -95,9 +95,9 @@ input[type=number] {
 }
 
 
-nextjs-portal {
+/* nextjs-portal {
   display: none;
-}
+} */
 
 .no-scrollbar::-webkit-scrollbar {
   display: none;

@@ -7,7 +7,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const resp = await axios('https://www.okx.com/priapi/v1/dx/market/v2/search', {
       params: {
         keyword,
-        
+        chainId: '501'
       }
     })
     res.status(200).send(resp.data.data)

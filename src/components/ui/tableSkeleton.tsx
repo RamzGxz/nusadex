@@ -5,7 +5,7 @@ import { Skeleton } from './skeleton';
 const TableSkeleton = ({length}: {length: number}) => {
   return (
     Array.from({ length }, (_v, i) => (
-      <TableRow className="cursor-pointer" key={i}>
+      <TableRow className="border-b-0" key={i}>
         <TableCell>
           <div className="flex gap-5 items-center">
             <div className="flex gap-3 items-center">

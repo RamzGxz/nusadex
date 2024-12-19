@@ -17,18 +17,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import formatNumber from '@/lib/formatNumber';
 
 interface props {
   image?: string,
-  name?: string
+  name?: string,
+  liq?: string
 }
 
-const DialogLiquidityDetails = ({ image, name }: props) => {
+const DialogLiquidityDetails = ({ image, name, liq }: props) => {
   const [open, setOpen] = useState(false)
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <button className=" flex items-center gap-1 group" onClick={() => setOpen(true)}>
-        <p className="text-xs">$135.5M</p>
+        <p className="text-xs">${formatNumber(Number(liq))}</p>
         <ChevronRight size={14} className='opacity-50 group-hover:opacity-100' />
       </button>
       <DialogContent className='max-w-screen-md'>
